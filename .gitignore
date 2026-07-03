@@ -1,0 +1,10 @@
+# Private plaintext guest list — never publish
+tools/guests.input.json
+
+# Local tooling artifacts
+graphify-out/
+.claude/
+
+# OS noise
+.DS_Store
+Thumbs.db

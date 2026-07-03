@@ -1,0 +1,1 @@
+The wedding soundtrack lives in this folder (assets/music/). The file used by the site is set in js/config.js (musicSrc), currently assets/music/2.mp3. The mute/unmute control appears automatically once the file exists.

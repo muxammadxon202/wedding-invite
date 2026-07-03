@@ -1,0 +1,634 @@
+/* ============================================================
+   intro.css — opening cinematic modal, countdown, open button,
+   rings sequence overlay, "not found" screen
+   ============================================================ */
+
+/* ---------- Opening modal ---------- */
+
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-intro);
+  display: grid;
+  place-items: center;
+  padding: clamp(1.25rem, 4vw, 3rem);
+  background:
+    radial-gradient(120% 90% at 50% 0%, #241B10 0%, #14100A 46%, var(--dark) 100%);
+  overflow: hidden;
+  transition: opacity 1.1s var(--ease-lux), visibility 1.1s;
+}
+.intro.is-leaving { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.intro__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Slow drifting golden light — pure CSS, GPU compositing only */
+.intro__aurora {
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(38% 30% at 30% 32%, rgba(198, 162, 75, .17), transparent 70%),
+    radial-gradient(30% 26% at 72% 60%, rgba(233, 217, 174, .13), transparent 70%),
+    radial-gradient(44% 36% at 50% 30%, rgba(214, 178, 94, .1), transparent 72%),
+    radial-gradient(26% 22% at 52% 84%, rgba(198, 162, 75, .1), transparent 70%);
+  animation: auroraDrift 26s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+/* Rotating god-rays, masked to a soft halo above the title */
+.intro__rays {
+  position: absolute;
+  inset: -32%;
+  background: repeating-conic-gradient(from 0deg at 50% 46%,
+    rgba(233, 217, 174, .075) 0deg 5deg,
+    transparent 5deg 16deg,
+    rgba(233, 217, 174, .05) 16deg 20deg,
+    transparent 20deg 34deg);
+  -webkit-mask-image: radial-gradient(46% 40% at 50% 46%, rgba(0, 0, 0, .95), transparent 72%);
+  mask-image: radial-gradient(46% 40% at 50% 46%, rgba(0, 0, 0, .95), transparent 72%);
+  animation: raysSpin 110s linear infinite;
+  will-change: transform;
+}
+
+/* Second, slower counter-rotating layer — the light gains real volume */
+.intro__rays--rev {
+  background: repeating-conic-gradient(from 8deg at 50% 42%,
+    rgba(240, 222, 170, .05) 0deg 3deg,
+    transparent 3deg 22deg);
+  -webkit-mask-image: radial-gradient(52% 46% at 50% 42%, rgba(0, 0, 0, .9), transparent 74%);
+  mask-image: radial-gradient(52% 46% at 50% 42%, rgba(0, 0, 0, .9), transparent 74%);
+  animation: raysSpin 170s linear infinite reverse;
+}
+
+/* Breathing central bloom above the names */
+.intro__bloom {
+  position: absolute;
+  left: 50%;
+  top: 34%;
+  width: min(1100px, 150vw);
+  aspect-ratio: 1.7;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(50% 50% at 50% 50%,
+    rgba(243, 222, 158, .16), rgba(243, 222, 158, .05) 55%, transparent 76%);
+  animation: bloomBreathe 9s ease-in-out infinite alternate;
+  will-change: opacity;
+  pointer-events: none;
+}
+
+/* Volumetric central light shaft — a soft god-ray column falling
+   from the top of the frame onto the names */
+.intro__beam {
+  position: absolute;
+  top: -6%;
+  left: 50%;
+  width: min(560px, 62vw);
+  height: 78%;
+  transform: translateX(-50%);
+  background:
+    linear-gradient(178deg, rgba(243, 226, 170, .16), rgba(243, 226, 170, .05) 55%, transparent 82%),
+    linear-gradient(184deg, rgba(255, 244, 210, .1), transparent 70%);
+  -webkit-mask-image: linear-gradient(#000 30%, transparent 96%),
+    radial-gradient(88% 100% at 50% 0%, #000 55%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(#000 30%, transparent 96%),
+    radial-gradient(88% 100% at 50% 0%, #000 55%, transparent 100%);
+  mask-composite: intersect;
+  animation: beamBreathe 11s ease-in-out infinite alternate;
+  will-change: opacity, transform;
+  pointer-events: none;
+}
+
+/* Photographic floral layers — full-height borders down both edges,
+   corner clusters above them, a blurred deep layer far behind:
+   the frame is never empty and blooms bleed off every screen edge */
+.intro__florals {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.intro__floral {
+  position: absolute;
+  width: auto;
+  will-change: transform;
+}
+
+/* Farthest layer: enlarged dim blurred copies — distant out-of-focus mass */
+.intro__floral-deep {
+  position: absolute;
+  top: -6%;
+  height: 112%;
+  width: auto;
+  max-width: 44vw;
+  object-fit: cover;
+  filter: blur(14px) brightness(.5) saturate(.9);
+  opacity: .55;
+  will-change: transform;
+}
+.intro__floral-deep--left {
+  left: -10%;
+  -webkit-mask-image: linear-gradient(90deg, #000 40%, transparent 92%);
+  mask-image: linear-gradient(90deg, #000 40%, transparent 92%);
+  animation: sideDrift 27s ease-in-out -4s infinite alternate;
+}
+.intro__floral-deep--right {
+  right: -10%;
+  -webkit-mask-image: linear-gradient(270deg, #000 40%, transparent 92%);
+  mask-image: linear-gradient(270deg, #000 40%, transparent 92%);
+  animation: sideDrift 31s ease-in-out -14s infinite alternate;
+}
+
+/* Full-height florist borders — roughly a third of the frame each side */
+.intro__floral--side-l,
+.intro__floral--side-r {
+  top: -2%;
+  height: 104%;
+  max-width: 36vw;
+  object-fit: cover;
+}
+.intro__floral--side-l {
+  left: 0;
+  object-position: left center;
+  -webkit-mask-image: linear-gradient(90deg, #000 46%, transparent 88%);
+  mask-image: linear-gradient(90deg, #000 46%, transparent 88%);
+  transform-origin: left center;
+  animation: floralBreathe 23s ease-in-out -5s infinite alternate;
+}
+.intro__floral--side-r {
+  right: 0;
+  object-position: right center;
+  -webkit-mask-image: linear-gradient(270deg, #000 46%, transparent 88%);
+  mask-image: linear-gradient(270deg, #000 46%, transparent 88%);
+  transform-origin: right center;
+  animation: floralBreathe 26s ease-in-out -12s infinite alternate;
+}
+
+/* Warm candlelight bloom hugging each floral border */
+.intro__floral-glow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 34vw;
+  pointer-events: none;
+  animation: bloomBreathe 8s ease-in-out infinite alternate;
+  will-change: opacity;
+}
+.intro__floral-glow--left {
+  left: 0;
+  background:
+    radial-gradient(60% 34% at 6% 26%, rgba(240, 210, 140, .1), transparent 74%),
+    radial-gradient(56% 30% at 4% 74%, rgba(226, 188, 118, .09), transparent 72%);
+}
+.intro__floral-glow--right {
+  right: 0;
+  animation-delay: -4s;
+  background:
+    radial-gradient(60% 34% at 94% 22%, rgba(240, 210, 140, .1), transparent 74%),
+    radial-gradient(56% 30% at 96% 70%, rgba(226, 188, 118, .09), transparent 72%);
+}
+
+.intro__floral--tl {
+  top: -3%;
+  left: -4%;
+  height: min(48vh, 500px);
+  -webkit-mask-image: radial-gradient(120% 120% at 0% 0%, #000 46%, transparent 74%);
+  mask-image: radial-gradient(120% 120% at 0% 0%, #000 46%, transparent 74%);
+  transform-origin: top left;
+  animation: floralBreathe 17s ease-in-out -2s infinite alternate;
+}
+
+.intro__floral--tr {
+  top: -3%;
+  right: -4%;
+  height: min(44vh, 460px);
+  -webkit-mask-image: radial-gradient(120% 120% at 100% 0%, #000 46%, transparent 74%);
+  mask-image: radial-gradient(120% 120% at 100% 0%, #000 46%, transparent 74%);
+  transform-origin: top right;
+  animation: floralBreathe 21s ease-in-out -9s infinite alternate;
+}
+
+.intro__floral--bl {
+  bottom: -4%;
+  left: -3%;
+  height: min(64vh, 680px);
+  -webkit-mask-image: radial-gradient(118% 118% at 0% 100%, #000 50%, transparent 78%);
+  mask-image: radial-gradient(118% 118% at 0% 100%, #000 50%, transparent 78%);
+  transform-origin: bottom left;
+  animation: floralBreathe 16s ease-in-out infinite alternate;
+}
+
+.intro__floral--br {
+  bottom: -4%;
+  right: -3%;
+  height: min(60vh, 640px);
+  -webkit-mask-image: radial-gradient(118% 118% at 100% 100%, #000 50%, transparent 78%);
+  mask-image: radial-gradient(118% 118% at 100% 100%, #000 50%, transparent 78%);
+  transform-origin: bottom right;
+  animation: floralBreathe 19s ease-in-out -6s infinite alternate;
+}
+
+/* Out-of-focus foreground copies — cinematic depth of field */
+.intro__floral-fg {
+  position: absolute;
+  bottom: -14%;
+  height: 58vh;
+  width: auto;
+  filter: blur(10px) brightness(.62) saturate(1.05);
+  opacity: .48;
+  will-change: transform;
+}
+
+.intro__floral-fg--left {
+  left: -14%;
+  transform-origin: bottom left;
+  animation: floralBreathe 13s ease-in-out -3s infinite alternate;
+}
+
+.intro__floral-fg--right {
+  right: -14%;
+  transform: scaleX(-1);
+  transform-origin: bottom right;
+  animation: floralBreatheFlip 15s ease-in-out -8s infinite alternate;
+}
+
+/* Ground fog — a slow pearl-gold mist breathing along the bottom */
+.intro__mist {
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  bottom: -6%;
+  height: 42%;
+  background:
+    radial-gradient(58% 68% at 28% 96%, rgba(238, 222, 188, .1), transparent 72%),
+    radial-gradient(52% 60% at 74% 100%, rgba(233, 214, 172, .085), transparent 70%),
+    linear-gradient(rgba(233, 217, 174, 0), rgba(233, 217, 174, .05) 65%, rgba(224, 202, 150, .09));
+  animation: mistDrift 23s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+/* Travelling diagonal light-band, like a soft reflector passing by */
+.intro__shimmer {
+  position: absolute;
+  inset: -12%;
+  background: linear-gradient(105deg,
+    transparent 42%, rgba(233, 217, 174, .07) 50%, transparent 58%);
+  animation: introShimmer 12s var(--ease-lux) infinite;
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+@media (max-width: 680px) {
+  .intro__floral--tl { height: 30vh; left: -14%; }
+  .intro__floral--tr { height: 27vh; right: -14%; }
+  .intro__floral--bl { height: 38vh; left: -16%; }
+  .intro__floral--br { height: 35vh; right: -16%; }
+  .intro__floral-fg { display: none; }
+  .intro__floral-deep { display: none; }
+  .intro__floral--side-l, .intro__floral--side-r { max-width: 30vw; opacity: .85; }
+  .intro__floral-glow { width: 30vw; }
+}
+
+/* Wandering lens flare — a hot core with two soft anamorphic streaks */
+.intro__flare {
+  position: absolute;
+  top: 10%;
+  left: 6%;
+  width: 300px;
+  height: 300px;
+  pointer-events: none;
+  background:
+    radial-gradient(16% 16% at 50% 50%, rgba(255, 248, 224, .55), transparent 70%),
+    radial-gradient(46% 5% at 50% 50%, rgba(240, 214, 140, .34), transparent 72%),
+    radial-gradient(5% 46% at 50% 50%, rgba(240, 214, 140, .2), transparent 72%),
+    radial-gradient(30% 30% at 50% 50%, rgba(214, 178, 94, .12), transparent 70%);
+  animation: flareDrift 38s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+.intro__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 100% at 50% 50%, transparent 55%, rgba(5, 4, 2, .55) 100%);
+  pointer-events: none;
+}
+
+/* Rises on its own (not gated on JS) so first paint stays fast */
+.intro__content {
+  position: relative;
+  max-width: 720px;
+  text-align: center;
+  color: #F4EEE0;
+  animation: introRise 1.2s var(--ease-lux) .15s both;
+}
+
+@keyframes introRise {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.intro__badge {
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .42em;
+  text-transform: uppercase;
+  color: rgba(233, 217, 174, .8);
+  margin-bottom: 1.4rem;
+}
+
+.intro__flourish {
+  width: min(220px, 56vw);
+  height: 24px;
+  margin: 0 auto 1.6rem;
+  color: var(--gold);
+}
+
+.intro__greeting {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-style: italic;
+  font-size: clamp(2.1rem, 6.4vw, 4.2rem);
+  line-height: 1.14;
+  letter-spacing: .01em;
+  color: #FAF4E4;
+  text-wrap: balance;
+  /* cinematic bloom: warm halo hugging the letterforms */
+  text-shadow:
+    0 0 18px rgba(243, 226, 170, .38),
+    0 0 56px rgba(226, 188, 118, .22),
+    0 0 110px rgba(198, 162, 75, .14);
+}
+
+.intro__lead {
+  max-width: 44ch;
+  margin: 1.3rem auto 0;
+  font-size: clamp(.95rem, 2.1vw, 1.08rem);
+  font-weight: 400;
+  line-height: 1.8;
+  color: rgba(235, 227, 210, .82);
+  text-wrap: balance;
+}
+
+/* ---------- Countdown ---------- */
+
+.countdown { margin-top: clamp(1.8rem, 4.5vh, 3rem); }
+
+.countdown__title {
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: rgba(233, 217, 174, .66);
+  margin-bottom: 1.1rem;
+}
+
+.countdown__grid {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(.4rem, 1.6vw, .9rem);
+}
+
+.countdown__cell {
+  min-width: clamp(62px, 16vw, 96px);
+  padding: clamp(.7rem, 1.8vw, 1rem) clamp(.4rem, 1.4vw, .8rem);
+  border-radius: 16px;
+  border: 1px solid rgba(233, 217, 174, .2);
+  background: rgba(255, 250, 235, .05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.countdown__num {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(1.7rem, 5.4vw, 2.9rem);
+  line-height: 1;
+  color: #F6EDD6;
+  font-variant-numeric: tabular-nums;
+}
+
+.countdown__label {
+  display: block;
+  margin-top: .5rem;
+  font-size: .64rem;
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: rgba(233, 217, 174, .62);
+}
+
+.countdown__colon {
+  align-self: center;
+  font-family: var(--serif);
+  font-size: clamp(1.2rem, 3.5vw, 2rem);
+  color: rgba(198, 162, 75, .55);
+  transform: translateY(-.4em);
+}
+
+/* Countdown finished — celebratory line replaces the grid */
+.countdown__done {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.5rem, 4.5vw, 2.4rem);
+  color: var(--gold-soft);
+}
+
+/* Light variant used inside the main invitation */
+.countdown--light .countdown__cell {
+  border-color: rgba(138, 109, 31, .22);
+  background: rgba(255, 255, 255, .55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-card);
+}
+.countdown--light .countdown__num { color: var(--gold-deep); }
+.countdown--light .countdown__label { color: var(--muted); }
+.countdown--light .countdown__colon { color: rgba(138, 109, 31, .45); }
+.countdown--light .countdown__done { color: var(--gold-deep); }
+
+/* ---------- Open button ---------- */
+
+.open-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  margin-top: clamp(2rem, 5vh, 3.2rem);
+  padding: 1.02rem 2.3rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(#191309, #191309) padding-box,
+    linear-gradient(120deg, #8A6D1F, #E9D9AE 45%, #C6A24B 70%, #8A6D1F) border-box;
+  color: #F3E7C8;
+  font-size: .92rem;
+  font-weight: 500;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  overflow: hidden;
+  transition: transform .3s var(--ease-lux), box-shadow .3s var(--ease-lux);
+  animation: btnBreathe 3.4s ease-in-out infinite;
+}
+
+/* travelling light sweep */
+.open-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 244, 214, .22) 50%, transparent 70%);
+  transform: translateX(-120%);
+  animation: btnSheen 4.6s var(--ease-lux) infinite;
+}
+
+.open-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 14px 44px -10px rgba(198, 162, 75, .55);
+  animation-play-state: paused;
+}
+.open-btn:active { transform: translateY(-1px) scale(.98); }
+
+.open-btn__butterfly {
+  width: 20px;
+  height: 20px;
+  color: var(--gold-soft);
+  transition: transform .35s var(--ease-lux);
+}
+.open-btn:hover .open-btn__butterfly { transform: translateY(-3px) rotate(-8deg) scale(1.12); }
+
+/* click → morph into light */
+.open-btn.is-morphing {
+  animation: btnMorph .8s var(--ease-lux) forwards;
+  pointer-events: none;
+}
+
+/* ---------- Cinematic rings overlay ---------- */
+
+.cinema {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-cinema);
+  display: grid;
+  place-items: center;
+  background: radial-gradient(100% 80% at 50% 50%, rgba(24, 18, 10, .0) 0%, rgba(10, 8, 4, .55) 100%);
+  opacity: 0;
+  transition: opacity .9s var(--ease-lux);
+  pointer-events: none;
+}
+.cinema.is-visible { opacity: 1; }
+.cinema.is-leaving { opacity: 0; transition: opacity 1s var(--ease-in-lux); }
+
+/* Soft god-rays converging on the rings */
+.cinema__rays {
+  position: absolute;
+  inset: -30%;
+  background: repeating-conic-gradient(from 0deg at 50% 50%,
+    rgba(233, 217, 174, .05) 0deg 4deg,
+    transparent 4deg 15deg);
+  -webkit-mask-image: radial-gradient(44% 40% at 50% 50%, rgba(0, 0, 0, .9), transparent 70%);
+  mask-image: radial-gradient(44% 40% at 50% 50%, rgba(0, 0, 0, .9), transparent 70%);
+  animation: raysSpin 95s linear infinite;
+  will-change: transform;
+}
+
+.cinema__rings { width: min(420px, 86vw); height: auto; overflow: visible; }
+
+.ring {
+  opacity: 0;
+  filter:
+    drop-shadow(0 0 16px rgba(198, 162, 75, .4))
+    drop-shadow(0 12px 10px rgba(0, 0, 0, .28));
+}
+.ring--left  { transform: translate(120px, 150px) rotate(-40deg) scale(.6); }
+.ring--right { transform: translate(300px, 150px) rotate(40deg) scale(.6); }
+
+.cinema.play .ring--left  { animation: ringLeft 2.6s var(--ease-lux) forwards; }
+.cinema.play .ring--right { animation: ringRight 2.6s var(--ease-lux) forwards; }
+
+/* Ground shadow assembles with the rings */
+.rings__shadow { opacity: 0; transform-box: fill-box; transform-origin: center; }
+.cinema.play .rings__shadow { animation: ringsShadowIn 2.6s var(--ease-lux) forwards; }
+
+/* Two reflections sweeping the band at different speeds/directions */
+.ring__gleam { transform-origin: 0 0; }
+.cinema.play .ring__gleam { animation: gleamSpin 2.6s var(--ease-lux) .5s infinite; }
+.cinema.play .ring__gleam--rev { animation: gleamSpin 3.4s linear .5s infinite reverse; }
+
+/* Sparkle burst at the moment the bands interlock */
+.ringburst__p {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.cinema.play .ringburst__p {
+  animation: ringSparkFly .95s cubic-bezier(.16, .84, .44, 1) 2.5s both;
+}
+
+.cinema__spark {
+  opacity: 0;
+  transform-origin: 210px 150px;
+  transform: scale(.2);
+}
+.cinema.play .cinema__spark { animation: sparkPop 1.1s var(--ease-lux) 2.25s forwards; }
+
+.cinema__bloom {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(50% 42% at 50% 50%, rgba(243, 222, 158, .3), rgba(243, 222, 158, .06) 55%, transparent 75%);
+  opacity: 0;
+  will-change: opacity, transform;
+}
+.cinema.play .cinema__bloom { animation: bloomRise 3.4s var(--ease-lux) .4s forwards; }
+
+.cinema__flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(60% 50% at 50% 50%, rgba(255, 250, 235, .95), rgba(243, 222, 158, .35) 55%, transparent 78%);
+  opacity: 0;
+}
+.cinema.play .cinema__flash { animation: flashPop 1s var(--ease-lux) 2.5s forwards; }
+
+/* ---------- Invitation not found ---------- */
+
+.notfound {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-intro);
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: radial-gradient(120% 90% at 50% 0%, #241B10 0%, #14100A 46%, var(--dark) 100%);
+}
+
+.notfound__card {
+  max-width: 480px;
+  padding: clamp(2rem, 6vw, 3.2rem);
+  text-align: center;
+  color: #EFE7D3;
+  border: 1px solid rgba(233, 217, 174, .18);
+  border-radius: 24px;
+  background: rgba(255, 250, 235, .04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: nfIn 1s var(--ease-lux) both;
+}
+
+.notfound__mark { width: 110px; height: 66px; margin: 0 auto 1.4rem; opacity: .9; }
+
+.notfound__card h1 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(1.6rem, 4.5vw, 2.2rem);
+  margin-bottom: .8rem;
+}
+
+.notfound__card p {
+  font-size: .95rem;
+  line-height: 1.8;
+  color: rgba(235, 227, 210, .75);
+}
