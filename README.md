@@ -1,4 +1,4 @@
-# 🦋 Wedding Invitation — Тимур & Малика
+# 🦋 Wedding Invitation — Мухаммадхон
 
 A cinematic, multilingual (RU / UZ) wedding invitation website. Pure HTML/CSS/JS,
 no frameworks, no backend — deploys straight to GitHub Pages.
