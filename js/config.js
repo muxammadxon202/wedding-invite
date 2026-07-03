@@ -33,15 +33,15 @@ export const CONFIG = {
 
   // Day programme: times here, translated labels in i18n.js
   schedule: [
-    { time: '17:00', key: 'gathering' },
+    { time: '17:45', key: 'gathering' },
     { time: '18:00', key: 'ceremony' },
     { time: '19:00', key: 'banquet' },
     { time: '23:00', key: 'farewell' },
   ],
 
   contacts: [
-    { name: { ru: 'Азиз', uz: 'Aziz' }, phone: '+998 90 123-45-67', tel: '+998901234567' },
-    { name: { ru: 'Дилноза', uz: 'Dilnoza' }, phone: '+998 91 765-43-21', tel: '+998917654321' },
+    { name: { ru: 'Фозил ака', uz: 'Fozil aka' }, phone: '+998 90 605-22-55', tel: '+998906052255' },
+    { name: { ru: 'Мухаммадхон', uz: 'Muxammadxon' }, phone: '+998 95 213-58-59', tel: '+998952135859' },
   ],
 
   musicSrc: 'assets/music/2.mp3',

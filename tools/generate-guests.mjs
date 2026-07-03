@@ -35,10 +35,13 @@ import path from 'node:path';
 const LOOKUP_PREFIX = 'wedding-lookup-v1|';
 const KEY_PREFIX = 'wedding-key-v1|';
 
+// Where the site lives — printed links are ready to send as-is.
+const DEFAULT_BASE = 'https://muxammadxon202.github.io/wedding-invite/';
+
 const here = path.dirname(fileURLToPath(import.meta.url));
 const args = process.argv.slice(2);
 const baseIdx = args.indexOf('--base');
-const base = baseIdx !== -1 ? args[baseIdx + 1] : './index.html';
+const base = baseIdx !== -1 ? args[baseIdx + 1] : DEFAULT_BASE;
 const inputFile =
   args.find((a, i) => !a.startsWith('--') && i !== baseIdx + 1) ??
   path.join(here, 'guests.input.json');
@@ -74,8 +77,16 @@ if (!Array.isArray(guestsIn) || guestsIn.length === 0) {
 const out = { version: 1, guests: {} };
 const links = [];
 
+let tokensAdded = 0;
+
 for (const g of guestsIn) {
-  const token = g.token ?? toBase64url(crypto.getRandomValues(new Uint8Array(16)));
+  // Generate a token once, then PERSIST it in the input file — re-running
+  // the script must never invalidate links that were already sent out.
+  if (!g.token) {
+    g.token = toBase64url(crypto.getRandomValues(new Uint8Array(16)));
+    tokensAdded++;
+  }
+  const token = g.token;
   const lookupId = toHex(await sha256(LOOKUP_PREFIX + token)).slice(0, 32);
 
   const record = {
@@ -99,6 +110,12 @@ for (const g of guestsIn) {
 
 const outPath = path.join(here, '..', 'data', 'guests.json');
 await writeFile(outPath, JSON.stringify(out, null, 2), 'utf8');
+
+// Persist newly generated tokens so every future run keeps links stable.
+if (tokensAdded > 0) {
+  await writeFile(inputFile, JSON.stringify(guestsIn, null, 2) + '\n', 'utf8');
+  console.log(`✓ Saved ${tokensAdded} new token(s) back to ${path.basename(inputFile)}`);
+}
 
 console.log(`\n✓ Encrypted ${links.length} guest(s) → data/guests.json\n`);
 console.log('Personal invitation links:\n');
