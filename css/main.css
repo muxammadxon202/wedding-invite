@@ -17,8 +17,29 @@
   z-index: var(--z-content);
   opacity: 0;
   transition: opacity 1.4s var(--ease-lux);
+  /* Paper wash under the text column: the centre always reads as clean
+     ivory card, florals stay lush at the edges */
+  background: linear-gradient(90deg,
+    rgba(251, 248, 241, 0) 0%,
+    rgba(251, 248, 241, .82) 17%,
+    rgba(251, 248, 241, .92) 38%,
+    rgba(251, 248, 241, .92) 62%,
+    rgba(251, 248, 241, .82) 83%,
+    rgba(251, 248, 241, 0) 100%);
 }
 .invitation.is-visible { opacity: 1; }
+
+/* Phones: the column is the whole screen — wash almost edge to edge,
+   flowers peek through only at the very margins */
+@media (max-width: 680px) {
+  .invitation {
+    background: linear-gradient(90deg,
+      rgba(251, 248, 241, .45) 0%,
+      rgba(251, 248, 241, .93) 9%,
+      rgba(251, 248, 241, .93) 91%,
+      rgba(251, 248, 241, .45) 100%);
+  }
+}
 
 /* ---------- Living background (behind the ambient canvas) ---------- */
 
@@ -220,6 +241,7 @@ body.on-light .page-florals { opacity: 1; }
 }
 
 @media (max-width: 680px) {
+  .page-photo { opacity: .85; }
   .page-photo--tl { height: 27vh; }
   .page-photo--tr { height: 24vh; }
   .page-photo--bl { height: 24vh; }
@@ -629,6 +651,15 @@ body.on-light .page-frame { opacity: 1; }
   .countdown__cell { min-width: 0; }
   .hero__sprig { opacity: .3; }
   .venue__links .btn { width: 100%; }
+
+  /* Messenger-first: most guests read this on a phone — body text a
+     touch larger and roomier, cards full-width */
+  .section { padding-left: 1.15rem; padding-right: 1.15rem; }
+  .section__text { font-size: 1.02rem; line-height: 1.9; }
+  .timeline__name { font-size: 1.04rem; }
+  .timeline__sub { font-size: .92rem; }
+  .contact-card { min-width: 100%; padding: 1.2rem 1.4rem; }
+  .venue__address { font-size: 1rem; }
 }
 
 @media (min-width: 1600px) {
