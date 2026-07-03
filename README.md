@@ -1,20 +1,35 @@
-# 🦋 Wedding Invitation — Тимур & Малика
+# 🦋 Wedding Invitation — Мухаммадхон & Зилолахон
 
-A cinematic, multilingual (RU / UZ) wedding invitation website. Pure HTML/CSS/JS,
-no frameworks, no backend — deploys straight to GitHub Pages.
+A cinematic, multilingual (RU / UZ) wedding invitation website.
+Pure HTML/CSS/JS — no frameworks, no backend, deploys straight to GitHub Pages.
 
-## Demo invitation links (replace before the real wedding!)
+**Live:** https://muxammadxon202.github.io/wedding-invite/
+*(opening without a personal `?invite=` link shows the "Invitation not found" screen — the guest list is never exposed)*
 
-The repository ships with three encrypted demo guests:
+## Adding a guest (one command)
 
-| Guest | Link |
-|---|---|
-| Тётя Ксения (RU) | `?invite=1f-WNuYxVP38n380IsO2DA` |
-| Азиз и семья (UZ) | `?invite=8GE09ZnEIaSJAntsni9tWg` |
-| Сергей и Анна (RU) | `?invite=SI8wjGhPYnFsJIQVCPL8qg` |
+```bash
+node tools/add-guest.mjs "Хотинжон" "Hotinjon" --f
+```
 
-Opening the site without a valid `?invite=` shows the elegant
-"Invitation not found" screen — the guest list is never exposed.
+Flags: `--f` female · `--m` male · `--family` family greeting · `--lang ru|uz` (default `uz`) ·
+`--greeting-ru "…"` / `--greeting-uz "…"` for a custom greeting.
+
+The script appends the guest to the private list, rebuilds the encrypted
+database and prints a ready-to-send link. Then publish:
+
+```bash
+git add data/guests.json && git commit -m "guest" && git push
+```
+
+Existing links always stay valid — tokens are persisted in
+`tools/guests.input.json` and survive re-runs.
+
+To reprint every guest's link at any time:
+
+```bash
+node tools/generate-guests.mjs
+```
 
 ## How the security works
 
@@ -33,16 +48,7 @@ Opening the site without a valid `?invite=` shows the elegant
 | Names, date, time, venue, schedule times, contacts | [js/config.js](js/config.js) |
 | All texts, both languages | [js/i18n.js](js/i18n.js) |
 | Page `<title>` / OG tags | [index.html](index.html) `<head>` |
-| Music | put your file at `assets/music.mp3` (control appears automatically) |
-
-## Managing guests
-
-1. Edit `tools/guests.input.json` (see the format inside `tools/generate-guests.mjs`).
-2. Run:
-   ```bash
-   node tools/generate-guests.mjs --base https://YOURNAME.github.io/REPO/
-   ```
-3. Commit the regenerated `data/guests.json` and send each guest their printed link.
+| Music | `assets/music/2.mp3` (path set in `js/config.js` → `musicSrc`) |
 
 Per-guest `weddingDate` / `weddingTime` overrides are supported (e.g. different
 banquet times for different groups).
@@ -52,15 +58,9 @@ banquet times for different groups).
 WebCrypto needs `https://` or `localhost`, so don't open `index.html` from disk:
 
 ```bash
-python -m http.server 8080
-# → http://localhost:8080/?invite=1f-WNuYxVP38n380IsO2DA
+python -m http.server 8123
+# → http://localhost:8123/?invite=<token from generate-guests output>
 ```
-
-## Deploy to GitHub Pages
-
-1. Create a repository and push this folder's contents to its root.
-2. Settings → Pages → Deploy from branch → `main` / root.
-3. Your invitations live at `https://YOURNAME.github.io/REPO/?invite=…`
 
 ## Project structure
 
@@ -71,8 +71,8 @@ js/                   config · i18n · guest (WebCrypto) · countdown ·
                       particles (canvas engine) · intro (sequence) ·
                       audio · scroll · main
 data/guests.json      encrypted guest database (safe to publish)
-tools/                guest generator (Node ≥ 20) + private input
-assets/               favicon, music.mp3 (added manually)
+tools/                add-guest.mjs · generate-guests.mjs (Node ≥ 20) + private input
+assets/               floral art, favicon, music
 ```
 
 ## Accessibility & performance
@@ -80,5 +80,6 @@ assets/               favicon, music.mp3 (added manually)
 - Full `prefers-reduced-motion` support (the cinematic collapses to a crossfade,
   particles never start).
 - Keyboard navigable, focus-visible rings, skip link, semantic headings.
-- Canvas effects: DPR-capped, viewport-scaled particle counts, paused on hidden tabs.
+- Canvas effects: DPR-capped, viewport-scaled particle counts, paused on hidden
+  tabs, adaptive quality governor on slow devices.
 - The map is a click-to-load facade — no third-party code until the guest asks for it.
