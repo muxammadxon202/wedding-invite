@@ -95,6 +95,11 @@
         </g>
       </symbol>
 
+      <!-- Small gold heart — used as the "add to calendar" accent -->
+      <symbol id="heartIcon" viewBox="-8 -2 16 14">
+        <path d="M0 2.4 C0 .6 -1.7 -1.2 -3.6 -1.2 C-5.8 -1.2 -7.2 .5 -7.2 2.4 C-7.2 5.3 -3.6 7.7 0 10.8 C3.6 7.7 7.2 5.3 7.2 2.4 C7.2 .5 5.8 -1.2 3.6 -1.2 C1.7 -1.2 0 .6 0 2.4 Z" fill="url(#goldFill)"/>
+      </symbol>
+
       <!-- Gold-foil corner composition for the light "printed card" screen:
            open rose, peony, eucalyptus branch, sakura sprig, gypsophila -->
       <symbol id="cornerFloral" viewBox="0 0 320 320">
@@ -416,6 +421,15 @@
       <h2 class="section__title serif-italic" id="mainGreeting">&nbsp;</h2>
       <p class="section__text" data-i18n="invite.p1">В нашей жизни наступает особенный день — день, когда два сердца соединятся в одно. Мы будем счастливы разделить эти мгновения с самыми близкими и дорогими людьми.</p>
       <p class="section__text" data-i18n="invite.p2">Ваше присутствие сделает наш праздник по-настоящему незабываемым.</p>
+
+      <button type="button" class="add-calendar" id="addCalendarBtn" data-i18n-aria="a11y.addToCalendar" aria-label="Добавить дату свадьбы в календарь">
+        <span class="add-calendar__card">
+          <span class="add-calendar__month" id="calMonth">АВГУСТ</span>
+          <span class="add-calendar__day" id="calDay">3</span>
+          <svg class="add-calendar__heart" aria-hidden="true"><use href="#heartIcon"/></svg>
+        </span>
+        <span class="add-calendar__label" data-i18n="date.addToCalendar">Добавить в календарь</span>
+      </button>
     </section>
 
     <!-- Date + countdown -->
@@ -458,13 +472,6 @@
         <svg class="path-timeline__svg" id="pathSvg" viewBox="0 0 100 500" preserveAspectRatio="none" aria-hidden="true">
           <path id="pathCurve" class="path-timeline__curve"
                 d="M50 0 C14 34 14 56 50 90 S 86 146 50 180 S 14 236 50 270 S 86 326 50 360 S 14 416 50 450 L50 500"/>
-          <g id="pathMarker" class="path-timeline__marker">
-            <g class="path-timeline__marker-pulse">
-              <path d="M0 2.4 C0 .6 -1.7 -1.2 -3.6 -1.2 C-5.8 -1.2 -7.2 .5 -7.2 2.4 C-7.2 5.3 -3.6 7.7 0 10.8 C3.6 7.7 7.2 5.3 7.2 2.4 C7.2 .5 5.8 -1.2 3.6 -1.2 C1.7 -1.2 0 .6 0 2.4 Z"
-                    fill="url(#goldFill)" stroke="#8A6D1F" stroke-width=".3"/>
-              <circle cx="-1.6" cy="1.2" r=".8" fill="#FFF8E1" opacity=".8"/>
-            </g>
-          </g>
         </svg>
         <ol class="path-timeline__list" id="scheduleList"></ol>
       </div>

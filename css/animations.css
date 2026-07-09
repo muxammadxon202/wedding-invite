@@ -174,10 +174,10 @@
   to   { stroke-dashoffset: -9.2; }
 }
 
-/* The heart marker breathes gently as it glides down the thread */
-@keyframes markerPulse {
+/* Small gold heart accents (add-to-calendar) breathe gently */
+@keyframes heartPulse {
   0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.22); }
+  50%      { transform: scale(1.16); }
 }
 
 @keyframes nfIn {

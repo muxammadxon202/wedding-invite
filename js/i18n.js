@@ -11,6 +11,7 @@ export const STRINGS = {
     'a11y.langLabel': 'Выбор языка',
     'a11y.musicOn': 'Включить музыку',
     'a11y.musicOff': 'Выключить музыку',
+    'a11y.addToCalendar': 'Добавить дату свадьбы в календарь',
     'common.and': 'и',
     'hero.partnerHidden': 'любимая',
 
@@ -18,6 +19,8 @@ export const STRINGS = {
     'intro.fallbackGreeting': 'Дорогие гости',
     'intro.lead': 'Приглашаем вас разделить с нами самый важный день нашей жизни',
     'intro.open': 'Открыть приглашение',
+
+    'date.addToCalendar': 'Добавить в календарь',
 
     'cd.title': 'До торжества осталось',
     'cd.aria': 'Обратный отсчёт до свадьбы',
@@ -73,6 +76,7 @@ export const STRINGS = {
     'a11y.langLabel': 'Tilni tanlash',
     'a11y.musicOn': 'Musiqani yoqish',
     'a11y.musicOff': 'Musiqani oʻchirish',
+    'a11y.addToCalendar': 'Toʻy sanasini kalendarga qoʻshish',
     'common.and': 'va',
     'hero.partnerHidden': "umr yoʻldoshim",
 
@@ -80,6 +84,8 @@ export const STRINGS = {
     'intro.fallbackGreeting': 'Aziz mehmonlar',
     'intro.lead': 'Sizni hayotimizdagi eng muhim kunni biz bilan birga oʻtkazishga taklif qilamiz',
     'intro.open': 'Taklifnomani ochish',
+
+    'date.addToCalendar': 'Kalendarga qoʻshish',
 
     'cd.title': 'Toʻygacha qoldi',
     'cd.aria': 'Toʻygacha teskari hisob',

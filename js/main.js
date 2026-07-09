@@ -36,6 +36,10 @@ const DATE_NAMES = {
   ru: {
     months: ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
       'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'],
+    // Nominative case — for standalone labels like the calendar card
+    // header, where "августа" (genitive, used in "3 августа") reads wrong.
+    monthsNom: ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь',
+      'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'],
     weekdays: ['воскресенье', 'понедельник', 'вторник', 'среда',
       'четверг', 'пятница', 'суббота'],
   },
@@ -78,6 +82,40 @@ function coupleDisplay(guest, lang) {
   return `${CONFIG.couple.first[lang]} ${t('common.and')} ${partnerNameFor(guest, lang)}`;
 }
 
+/* ---------- add to calendar (.ics download) ---------- */
+
+const pad2 = (n) => String(n).padStart(2, '0');
+
+const icsTimestamp = (d) =>
+  `${d.getUTCFullYear()}${pad2(d.getUTCMonth() + 1)}${pad2(d.getUTCDate())}` +
+  `T${pad2(d.getUTCHours())}${pad2(d.getUTCMinutes())}${pad2(d.getUTCSeconds())}Z`;
+
+const icsEscape = (s) => s.replace(/([,;])/g, '\\$1').replace(/\n/g, '\\n');
+
+/** Builds a data: URL for a standalone .ics file — works offline, no
+ * external calendar API, and every mobile OS offers to open it with
+ * the guest's own calendar app. Respects hidePartner in the title. */
+function buildIcsDataUrl(guest, moment, lang) {
+  const start = moment;
+  const end = new Date(start.getTime() + 5 * 60 * 60 * 1000); // 5h default
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Wedding Invite//RU',
+    'BEGIN:VEVENT',
+    `UID:${start.getTime()}-wedding-invite@muxammadxon202.github.io`,
+    `DTSTAMP:${icsTimestamp(new Date())}`,
+    `DTSTART:${icsTimestamp(start)}`,
+    `DTEND:${icsTimestamp(end)}`,
+    `SUMMARY:${icsEscape(`${coupleDisplay(guest, lang)} — ${t('hero.eyebrow')}`)}`,
+    `LOCATION:${icsEscape(`${CONFIG.venue.name[lang]}, ${CONFIG.venue.address[lang]}`)}`,
+    `DESCRIPTION:${icsEscape(greetingFor(guest, lang))}`,
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ];
+  return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(lines.join('\r\n'));
+}
+
 function renderDynamic(guest, moment) {
   const lang = getLang();
 
@@ -101,6 +139,27 @@ function renderDynamic(guest, moment) {
   $('venueName').textContent = CONFIG.venue.name[lang];
   $('venueAddress').textContent = CONFIG.venue.address[lang];
   $('closingNames').textContent = coupleDisplay(guest, lang);
+
+  // Add-to-calendar card: date shown per guest's own wedding moment,
+  // click generates a fresh .ics with the current language/guest baked in
+  const calMonth = $('calMonth');
+  const calDay = $('calDay');
+  if (calMonth && calDay) {
+    calDay.textContent = String(moment.getDate());
+    const nomMonths = DATE_NAMES[lang].monthsNom || DATE_NAMES[lang].months;
+    calMonth.textContent = nomMonths[moment.getMonth()].toUpperCase();
+  }
+  const calBtn = $('addCalendarBtn');
+  if (calBtn) {
+    calBtn.onclick = () => {
+      const a = document.createElement('a');
+      a.href = buildIcsDataUrl(guest, moment, lang);
+      a.download = 'wedding.ics';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    };
+  }
 
   // Wax-seal monogram on the open button — first letters, per language
   const sealMono = $('openSealMono');
