@@ -384,8 +384,14 @@
 
       <button type="button" class="add-calendar" id="addCalendarBtn" data-i18n-aria="a11y.addToCalendar" aria-label="Добавить дату свадьбы в календарь">
         <span class="add-calendar__card">
-          <span class="add-calendar__month" id="calMonth">АВГУСТ</span>
-          <span class="add-calendar__day" id="calDay">3</span>
+          <span class="add-calendar__rings" aria-hidden="true">
+            <span class="add-calendar__ring"></span>
+            <span class="add-calendar__ring"></span>
+          </span>
+          <span class="add-calendar__body">
+            <span class="add-calendar__month" id="calMonth">АВГУСТ</span>
+            <span class="add-calendar__day" id="calDay">3</span>
+          </span>
           <svg class="add-calendar__heart" aria-hidden="true"><use href="#heartIcon"/></svg>
         </span>
         <span class="add-calendar__label" data-i18n="date.addToCalendar">Добавить в календарь</span>

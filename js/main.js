@@ -132,9 +132,11 @@ function renderDynamic(guest, moment) {
     document.createTextNode(' ' + partnerNameFor(guest, lang)),
   );
   $('heroDate').textContent = formatDate(moment, lang);
+  // The full date is already on the add-to-calendar card right above
+  // this section — no need to repeat it, just weekday + time here.
+  const weekday = formatWeekday(moment, lang);
   $('dateLine').textContent =
-    `${formatDate(moment, lang)} · ${formatWeekday(moment, lang)} · ${
-      (guest && guest.weddingTime) || CONFIG.weddingTime}`;
+    `${weekday[0].toUpperCase()}${weekday.slice(1)} · ${(guest && guest.weddingTime) || CONFIG.weddingTime}`;
 
   $('venueName').textContent = CONFIG.venue.name[lang];
   $('venueAddress').textContent = CONFIG.venue.address[lang];

@@ -365,13 +365,48 @@ body.on-light .page-frame { opacity: 1; }
 .add-calendar:hover { transform: translateY(-3px); }
 .add-calendar:active { transform: translateY(0) scale(.96); }
 
+/* Outer wrapper — sized to content, holds the ring loops (which poke
+   above the glass body) and the heart badge (which overhangs the
+   bottom-right corner). Nothing here clips. */
 .add-calendar__card {
   position: relative;
   width: 84px;
+  padding-top: 9px;
+}
+
+/* Two small ring loops, like a hanging desk calendar — the clearest
+   visual shorthand for "this is a calendar", not a badge */
+.add-calendar__rings {
+  position: absolute;
+  top: -3px;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  pointer-events: none;
+}
+.add-calendar__ring {
+  width: 9px;
+  height: 15px;
+  border-radius: 5px;
+  border: 2px solid var(--gold);
+  background: rgba(255, 255, 255, .5);
+  box-shadow: 0 1px 2px rgba(70, 52, 18, .2);
+}
+
+/* Glass body — transparent, blurred, gold hairline, same family as
+   .glass-card used elsewhere on the page */
+.add-calendar__body {
+  position: relative;
   border-radius: 14px;
   overflow: hidden;
   border: 1px solid var(--line-gold);
-  background: var(--paper);
+  background: rgba(255, 255, 255, .4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-card);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -380,29 +415,31 @@ body.on-light .page-frame { opacity: 1; }
 
 /* Travelling light sweep — same trick as .open-btn::before — so the
    card reads as a living object, not a static graphic */
-.add-calendar__card::before {
+.add-calendar__body::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(115deg, transparent 30%, rgba(255, 244, 214, .5) 50%, transparent 70%);
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 244, 214, .6) 50%, transparent 70%);
   transform: translateX(-120%);
   animation: btnSheen 4.2s var(--ease-lux) infinite;
   pointer-events: none;
 }
 
 .add-calendar__month {
+  position: relative;
   display: block;
   width: 100%;
-  padding: .34rem 0;
-  background: linear-gradient(135deg, #8A6D1F, #C6A24B);
+  padding: .32rem 0;
+  background: linear-gradient(135deg, rgba(138, 109, 31, .82), rgba(198, 162, 75, .82));
   color: #FFFDF4;
-  font-size: .6rem;
+  font-size: .58rem;
   font-weight: 600;
   letter-spacing: .16em;
   text-align: center;
 }
 
 .add-calendar__day {
+  position: relative;
   display: block;
   padding: .5rem 0 .7rem;
   font-family: var(--serif);
@@ -417,6 +454,7 @@ body.on-light .page-frame { opacity: 1; }
   position: absolute;
   bottom: -6px;
   right: -6px;
+  z-index: 1;
   width: 22px;
   height: 22px;
   filter: drop-shadow(0 1px 2px rgba(70, 52, 18, .35));
