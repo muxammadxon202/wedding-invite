@@ -372,10 +372,22 @@ body.on-light .page-frame { opacity: 1; }
   overflow: hidden;
   border: 1px solid var(--line-gold);
   background: var(--paper);
-  box-shadow: var(--shadow-card);
   display: flex;
   flex-direction: column;
   align-items: center;
+  animation: calBreathe 3.2s ease-in-out infinite;
+}
+
+/* Travelling light sweep — same trick as .open-btn::before — so the
+   card reads as a living object, not a static graphic */
+.add-calendar__card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 244, 214, .5) 50%, transparent 70%);
+  transform: translateX(-120%);
+  animation: btnSheen 4.2s var(--ease-lux) infinite;
+  pointer-events: none;
 }
 
 .add-calendar__month {
@@ -499,87 +511,61 @@ body.on-light .page-frame { opacity: 1; }
   font-variant-numeric: tabular-nums;
 }
 
-/* ---------- Schedule path-timeline ---------- */
+/* ---------- Timeline ---------- */
 
-/* A winding gold thread runs behind the day's moments; a small heart
-   glides along it as the guest scrolls (see js/scroll.js). The SVG
-   uses viewBox="0 0 100 500" preserveAspectRatio="none" so it always
-   stretches to match the list's real (language-dependent) height —
-   the marker, drawn in the same coordinate space, never needs manual
-   pixel conversion. */
-.path-timeline {
-  position: relative;
-  max-width: 440px;
-  margin: 1.4rem auto 0;
-}
-
-.path-timeline__svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-.path-timeline__curve {
-  fill: none;
-  stroke: url(#goldStroke);
-  stroke-width: .7;
-  stroke-linecap: round;
-  stroke-dasharray: 1.6 3;
-  opacity: .62;
-  animation: pathFlow 2.6s linear infinite;
-}
-
-.path-timeline__list {
-  position: relative;
-  z-index: 1;
+.timeline {
+  max-width: 420px;
+  margin: 1rem auto 0;
   text-align: left;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(1.6rem, 4.5vh, 2.4rem);
-  padding: .5rem 0;
+  position: relative;
+  padding-left: 2rem;
+}
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 12px;
+  bottom: 12px;
+  width: 1px;
+  background: linear-gradient(var(--line-gold), rgba(198, 162, 75, .08));
 }
 
-.path-item {
-  display: flex;
-  align-items: center;
-  gap: 1.1rem;
+.timeline__item {
+  position: relative;
+  padding: 0 0 1.9rem;
+}
+.timeline__item:last-child { padding-bottom: 0; }
+
+.timeline__item::before {
+  content: "";
+  position: absolute;
+  left: calc(-2rem + 2px);
+  top: .48em;
+  width: 11px;
+  height: 11px;
+  background: linear-gradient(135deg, #E9D9AE, #C6A24B);
+  transform: rotate(45deg);
+  border-radius: 2px;
+  box-shadow: 0 0 0 4px rgba(198, 162, 75, .14);
 }
 
-.path-item__icon {
-  flex-shrink: 0;
-  width: 48px;
-  height: 48px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, .68);
-  border: 1px solid var(--line-gold);
-  box-shadow: var(--shadow-card);
-  color: var(--gold-deep);
-}
-.path-item__icon svg { width: 24px; height: 24px; }
-
-.path-item__body { flex: 1; min-width: 0; }
-
-.path-item__time {
+.timeline__time {
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 1.3rem;
+  font-size: 1.35rem;
   color: var(--gold-deep);
   font-variant-numeric: tabular-nums;
   line-height: 1.2;
 }
 
-.path-item__name {
+.timeline__name {
   font-weight: 600;
   font-size: .98rem;
   color: var(--ink);
   margin-top: .15rem;
 }
 
-.path-item__sub {
+.timeline__sub {
   font-size: .86rem;
   color: var(--muted);
   margin-top: .15rem;
@@ -751,8 +737,8 @@ body.on-light .page-frame { opacity: 1; }
      touch larger and roomier, cards full-width */
   .section { padding-left: 1.15rem; padding-right: 1.15rem; }
   .section__text { font-size: 1.02rem; line-height: 1.9; }
-  .path-item__name { font-size: 1.04rem; }
-  .path-item__sub { font-size: .92rem; }
+  .timeline__name { font-size: 1.04rem; }
+  .timeline__sub { font-size: .92rem; }
   .contact-card { min-width: 100%; padding: 1.2rem 1.4rem; }
   .venue__address { font-size: 1rem; }
 }

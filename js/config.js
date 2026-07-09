@@ -31,14 +31,13 @@ export const CONFIG = {
     },
   },
 
-  // Day programme: times + icon (SVG symbol id) here, translated
-  // labels in i18n.js
+  // Day programme: times here, translated labels in i18n.js
   schedule: [
-    { time: '17:45', key: 'gathering', icon: 'iconToast' },
-    { time: '18:00', key: 'ceremony', icon: 'iconRings' },
-    { time: '19:00', key: 'banquet', icon: 'iconBanquet' },
-    { time: '21:30', key: 'cake', icon: 'iconCake' },
-    { time: '23:00', key: 'farewell', icon: 'butterflyIcon' },
+    { time: '17:45', key: 'gathering' },
+    { time: '18:00', key: 'ceremony' },
+    { time: '19:00', key: 'banquet' },
+    { time: '21:30', key: 'cake' },
+    { time: '23:00', key: 'farewell' },
   ],
 
   contacts: [

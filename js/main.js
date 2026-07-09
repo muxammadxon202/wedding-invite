@@ -167,40 +167,23 @@ function renderDynamic(guest, moment) {
     sealMono.textContent = `${CONFIG.couple.first[lang][0]}&${CONFIG.couple.second[lang][0]}`;
   }
 
-  // Schedule path-timeline: icon badge + time/name/sub per moment
-  const SVG_NS = 'http://www.w3.org/2000/svg';
-  const XLINK_NS = 'http://www.w3.org/1999/xlink';
+  // Schedule timeline
   $('scheduleList').replaceChildren(
     ...CONFIG.schedule.map((item, i) => {
       const li = document.createElement('li');
-      li.className = 'path-item';
+      li.className = 'timeline__item';
       li.dataset.stagger = '';
       li.style.setProperty('--i', i);
-
-      const iconWrap = document.createElement('span');
-      iconWrap.className = 'path-item__icon';
-      const svg = document.createElementNS(SVG_NS, 'svg');
-      svg.setAttribute('aria-hidden', 'true');
-      const use = document.createElementNS(SVG_NS, 'use');
-      use.setAttributeNS(XLINK_NS, 'xlink:href', `#${item.icon}`);
-      use.setAttribute('href', `#${item.icon}`);
-      svg.append(use);
-      iconWrap.append(svg);
-
-      const body = document.createElement('div');
-      body.className = 'path-item__body';
       const time = Object.assign(document.createElement('p'), {
-        className: 'path-item__time', textContent: item.time,
+        className: 'timeline__time', textContent: item.time,
       });
       const name = Object.assign(document.createElement('p'), {
-        className: 'path-item__name', textContent: t(`schedule.${item.key}`),
+        className: 'timeline__name', textContent: t(`schedule.${item.key}`),
       });
       const sub = Object.assign(document.createElement('p'), {
-        className: 'path-item__sub', textContent: t(`schedule.${item.key}.sub`),
+        className: 'timeline__sub', textContent: t(`schedule.${item.key}.sub`),
       });
-      body.append(time, name, sub);
-
-      li.append(iconWrap, body);
+      li.append(time, name, sub);
       return li;
     }),
   );

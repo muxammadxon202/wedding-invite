@@ -167,17 +167,17 @@
   50%      { transform: translateY(-7px); }
 }
 
-/* The gold thread behind the schedule flows continuously — a subtle
-   travelling-light feel, independent of scroll position */
-@keyframes pathFlow {
-  from { stroke-dashoffset: 0; }
-  to   { stroke-dashoffset: -9.2; }
-}
-
 /* Small gold heart accents (add-to-calendar) breathe gently */
 @keyframes heartPulse {
   0%, 100% { transform: scale(1); }
   50%      { transform: scale(1.16); }
+}
+
+/* Add-to-calendar card: soft gold glow breathing, so it reads as alive
+   rather than a static graphic (same feel as .open-btn's btnBreathe) */
+@keyframes calBreathe {
+  0%, 100% { box-shadow: var(--shadow-card), 0 0 0 0 rgba(198, 162, 75, 0); }
+  50%      { box-shadow: var(--shadow-card), 0 0 22px -2px rgba(198, 162, 75, .55); }
 }
 
 @keyframes nfIn {
