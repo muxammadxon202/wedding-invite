@@ -167,6 +167,19 @@
   50%      { transform: translateY(-7px); }
 }
 
+/* The gold thread behind the schedule flows continuously — a subtle
+   travelling-light feel, independent of scroll position */
+@keyframes pathFlow {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -9.2; }
+}
+
+/* The heart marker breathes gently as it glides down the thread */
+@keyframes markerPulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.22); }
+}
+
 @keyframes nfIn {
   from { opacity: 0; transform: translateY(24px) scale(.97); filter: blur(6px); }
   to   { opacity: 1; transform: none; filter: blur(0); }

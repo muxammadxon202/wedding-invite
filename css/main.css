@@ -455,15 +455,27 @@ body.on-light .page-frame { opacity: 1; }
 .path-timeline__curve {
   fill: none;
   stroke: url(#goldStroke);
-  stroke-width: .55;
+  stroke-width: .7;
   stroke-linecap: round;
-  stroke-dasharray: 1.4 3.2;
-  opacity: .5;
+  stroke-dasharray: 1.6 3;
+  opacity: .62;
+  animation: pathFlow 2.6s linear infinite;
 }
 
+/* Outer group carries the scroll-driven position (JS sets its
+   transform attribute every frame) — the CSS transition smooths that
+   into a glide instead of a per-frame snap. */
 .path-timeline__marker {
   filter: drop-shadow(0 1px 2px rgba(70, 52, 18, .35));
-  transition: opacity .3s;
+  transition: transform .3s var(--ease-lux), opacity .3s;
+}
+
+/* Inner group only ever gets a CSS transform (the breathing pulse) —
+   kept separate so it never fights the JS-driven position above. */
+.path-timeline__marker-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: markerPulse 1.7s ease-in-out infinite;
 }
 
 .path-timeline__list {
