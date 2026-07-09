@@ -173,6 +173,23 @@
   50%      { transform: scale(1.16); }
 }
 
+/* The wedding day's circled number beats like a real heart — a quick
+   "lub-dub" double pulse, then a rest, on repeat */
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  14%      { transform: scale(1.18); }
+  28%      { transform: scale(1); }
+  42%      { transform: scale(1.12); }
+  70%      { transform: scale(1); }
+}
+
+/* A ring expands outward from the day and fades, timed to the beat */
+@keyframes heartbeatRing {
+  0%   { transform: scale(1); opacity: .7; }
+  60%  { transform: scale(1.55); opacity: 0; }
+  100% { transform: scale(1.55); opacity: 0; }
+}
+
 /* Add-to-calendar card: soft gold glow breathing, so it reads as alive
    rather than a static graphic (same feel as .open-btn's btnBreathe) */
 @keyframes calBreathe {

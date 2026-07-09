@@ -450,10 +450,24 @@ body.on-light .page-frame { opacity: 1; }
 .calendar-grid__cell--dim { color: var(--muted); opacity: .35; }
 
 .calendar-grid__cell--target {
+  position: relative;
   background: linear-gradient(135deg, #8A6D1F, #C6A24B);
   color: #FFFDF4;
   font-weight: 700;
   box-shadow: 0 3px 10px -3px rgba(138, 109, 31, .6);
+  animation: heartbeat 1.15s ease-in-out infinite;
+}
+
+/* A ring pulses outward on every beat, like a heartbeat pinging on
+   a monitor — the wedding day reads as alive, not just highlighted */
+.calendar-grid__cell--target::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(198, 162, 75, .65);
+  animation: heartbeatRing 1.15s ease-out infinite;
+  pointer-events: none;
 }
 
 .add-calendar__label {
