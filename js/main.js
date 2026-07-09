@@ -51,6 +51,36 @@ const DATE_NAMES = {
   },
 };
 
+// Monday-first weekday header for the calendar grid
+const WEEKDAYS_SHORT = {
+  ru: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+  uz: ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh', 'Ya'],
+};
+
+/** Builds a full Monday-first month grid (always a multiple of 7 cells)
+ * for the month containing `momentDate`, with the wedding day flagged. */
+function buildMonthGrid(momentDate) {
+  const year = momentDate.getFullYear();
+  const month = momentDate.getMonth();
+  const targetDay = momentDate.getDate();
+  const firstWeekdayMon0 = (new Date(year, month, 1).getDay() + 6) % 7;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+  const cells = [];
+  for (let i = firstWeekdayMon0 - 1; i >= 0; i--) {
+    cells.push({ day: daysInPrevMonth - i, dim: true, target: false });
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    cells.push({ day: d, dim: false, target: d === targetDay });
+  }
+  let next = 1;
+  while (cells.length % 7 !== 0) {
+    cells.push({ day: next++, dim: true, target: false });
+  }
+  return cells;
+}
+
 function formatDate(dateObj, lang) {
   const d = dateObj.getDate();
   const m = DATE_NAMES[lang].months[dateObj.getMonth()];
@@ -142,14 +172,30 @@ function renderDynamic(guest, moment) {
   $('venueAddress').textContent = CONFIG.venue.address[lang];
   $('closingNames').textContent = coupleDisplay(guest, lang);
 
-  // Add-to-calendar card: date shown per guest's own wedding moment,
-  // click generates a fresh .ics with the current language/guest baked in
-  const calMonth = $('calMonth');
-  const calDay = $('calDay');
-  if (calMonth && calDay) {
-    calDay.textContent = String(moment.getDate());
+  // Add-to-calendar month grid: full calendar for the guest's own
+  // wedding moment, wedding day circled; click downloads a fresh .ics
+  // with the current language/guest baked in
+  const calMonthYear = $('calMonthYear');
+  const calWeekdays = $('calWeekdays');
+  const calDays = $('calDays');
+  if (calMonthYear && calWeekdays && calDays) {
     const nomMonths = DATE_NAMES[lang].monthsNom || DATE_NAMES[lang].months;
-    calMonth.textContent = nomMonths[moment.getMonth()].toUpperCase();
+    calMonthYear.textContent = `${nomMonths[moment.getMonth()].toUpperCase()} ${moment.getFullYear()}`;
+
+    calWeekdays.replaceChildren(
+      ...WEEKDAYS_SHORT[lang].map((wd) => Object.assign(document.createElement('span'), {
+        className: 'calendar-grid__wd', textContent: wd,
+      })),
+    );
+
+    calDays.replaceChildren(
+      ...buildMonthGrid(moment).map((cell) => Object.assign(document.createElement('span'), {
+        className: 'calendar-grid__cell'
+          + (cell.dim ? ' calendar-grid__cell--dim' : '')
+          + (cell.target ? ' calendar-grid__cell--target' : ''),
+        textContent: String(cell.day),
+      })),
+    );
   }
   const calBtn = $('addCalendarBtn');
   if (calBtn) {
