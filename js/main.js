@@ -108,23 +108,40 @@ function renderDynamic(guest, moment) {
     sealMono.textContent = `${CONFIG.couple.first[lang][0]}&${CONFIG.couple.second[lang][0]}`;
   }
 
-  // Schedule timeline
+  // Schedule path-timeline: icon badge + time/name/sub per moment
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const XLINK_NS = 'http://www.w3.org/1999/xlink';
   $('scheduleList').replaceChildren(
     ...CONFIG.schedule.map((item, i) => {
       const li = document.createElement('li');
-      li.className = 'timeline__item';
+      li.className = 'path-item';
       li.dataset.stagger = '';
       li.style.setProperty('--i', i);
+
+      const iconWrap = document.createElement('span');
+      iconWrap.className = 'path-item__icon';
+      const svg = document.createElementNS(SVG_NS, 'svg');
+      svg.setAttribute('aria-hidden', 'true');
+      const use = document.createElementNS(SVG_NS, 'use');
+      use.setAttributeNS(XLINK_NS, 'xlink:href', `#${item.icon}`);
+      use.setAttribute('href', `#${item.icon}`);
+      svg.append(use);
+      iconWrap.append(svg);
+
+      const body = document.createElement('div');
+      body.className = 'path-item__body';
       const time = Object.assign(document.createElement('p'), {
-        className: 'timeline__time', textContent: item.time,
+        className: 'path-item__time', textContent: item.time,
       });
       const name = Object.assign(document.createElement('p'), {
-        className: 'timeline__name', textContent: t(`schedule.${item.key}`),
+        className: 'path-item__name', textContent: t(`schedule.${item.key}`),
       });
       const sub = Object.assign(document.createElement('p'), {
-        className: 'timeline__sub', textContent: t(`schedule.${item.key}.sub`),
+        className: 'path-item__sub', textContent: t(`schedule.${item.key}.sub`),
       });
-      li.append(time, name, sub);
+      body.append(time, name, sub);
+
+      li.append(iconWrap, body);
       return li;
     }),
   );
@@ -143,19 +160,6 @@ function renderDynamic(guest, moment) {
         className: 'contact-card__phone', textContent: c.phone, href: `tel:${c.tel}`,
       });
       li.append(name, phone);
-      return li;
-    }),
-  );
-
-  // Dress-code palette swatches
-  $('dressPalette').replaceChildren(
-    ...CONFIG.dressCode.palette.map((c, i) => {
-      const li = document.createElement('li');
-      li.className = 'dress-swatch';
-      li.style.background = c.hex;
-      li.title = c.name[lang];
-      li.dataset.stagger = '';
-      li.style.setProperty('--i', i);
       return li;
     }),
   );

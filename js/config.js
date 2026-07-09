@@ -31,28 +31,15 @@ export const CONFIG = {
     },
   },
 
-  // Day programme: times here, translated labels in i18n.js
+  // Day programme: times + icon (SVG symbol id) here, translated
+  // labels in i18n.js
   schedule: [
-    { time: '17:45', key: 'gathering' },
-    { time: '18:00', key: 'ceremony' },
-    { time: '19:00', key: 'banquet' },
-    { time: '21:30', key: 'cake' },
-    { time: '23:00', key: 'farewell' },
+    { time: '17:45', key: 'gathering', icon: 'iconToast' },
+    { time: '18:00', key: 'ceremony', icon: 'iconRings' },
+    { time: '19:00', key: 'banquet', icon: 'iconBanquet' },
+    { time: '21:30', key: 'cake', icon: 'iconCake' },
+    { time: '23:00', key: 'farewell', icon: 'butterflyIcon' },
   ],
-
-  // Suggested guest attire palette (avoid pure black/white) — shown as
-  // small swatches under the dress-code section. Not tied to the site's
-  // own gold/ivory design tokens, this is *the guests'* colour guidance.
-  dressCode: {
-    palette: [
-      { hex: '#6B2737', name: { ru: 'Бордовый', uz: 'Bordo' } },
-      { hex: '#C17A54', name: { ru: 'Терракотовый', uz: 'Toʻqsariq' } },
-      { hex: '#D4AF6A', name: { ru: 'Золотисто-шампань', uz: 'Shampan-oltin' } },
-      { hex: '#8A9A6E', name: { ru: 'Шалфейный зелёный', uz: 'Shalvi yashil' } },
-      { hex: '#C98A9A', name: { ru: 'Пыльная роза', uz: 'Changgul pushti' } },
-      { hex: '#35415C', name: { ru: 'Тёмно-синий', uz: 'Toʻq koʻk' } },
-    ],
-  },
 
   contacts: [
     { name: { ru: 'Фозил ака', uz: 'Fozil aka' }, phone: '+998 90 605-22-55', tel: '+998906052255' },

@@ -11,7 +11,6 @@ export const STRINGS = {
     'a11y.langLabel': 'Выбор языка',
     'a11y.musicOn': 'Включить музыку',
     'a11y.musicOff': 'Выключить музыку',
-    'a11y.dressPalette': 'Рекомендуемая палитра оттенков',
     'common.and': 'и',
     'hero.partnerHidden': 'любимая',
 
@@ -55,13 +54,6 @@ export const STRINGS = {
     'venue.google': 'Открыть в Google Maps',
     'venue.yandex': 'Открыть в Яндекс Картах',
 
-    'dress.eyebrow': 'Дресс-код',
-    'dress.title': 'Как одеться',
-    'dress.men.title': 'Мужчинам',
-    'dress.men.text': 'Классический костюм в тёмных или нейтральных тонах',
-    'dress.women.title': 'Женщинам',
-    'dress.women.text': 'Вечернее платье в пастельных или золотистых оттенках',
-
     'contacts.eyebrow': 'Вопросы',
     'contacts.title': 'Будем на связи',
     'contacts.sub': 'Если у вас появятся вопросы, мы с радостью ответим.',
@@ -81,7 +73,6 @@ export const STRINGS = {
     'a11y.langLabel': 'Tilni tanlash',
     'a11y.musicOn': 'Musiqani yoqish',
     'a11y.musicOff': 'Musiqani oʻchirish',
-    'a11y.dressPalette': 'Tavsiya etilgan ranglar palitrasi',
     'common.and': 'va',
     'hero.partnerHidden': "umr yoʻldoshim",
 
@@ -124,13 +115,6 @@ export const STRINGS = {
     'venue.showMap': 'Xaritani koʻrsatish',
     'venue.google': 'Google Maps’da ochish',
     'venue.yandex': 'Yandex Xaritada ochish',
-
-    'dress.eyebrow': 'Dress-kod',
-    'dress.title': 'Nima kiyish kerak',
-    'dress.men.title': 'Erkaklar uchun',
-    'dress.men.text': 'Tim yoki neytral rangdagi klassik kostyum',
-    'dress.women.title': 'Ayollar uchun',
-    'dress.women.text': 'Pastel yoki oltin tusdagi kechki koʻylak',
 
     'contacts.eyebrow': 'Savollar',
     'contacts.title': 'Aloqada boʻlamiz',
