@@ -551,6 +551,62 @@ body.on-light .page-frame { opacity: 1; }
   margin-top: 1.4rem;
 }
 
+/* ---------- Dress code ---------- */
+
+.dress-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.1rem;
+  margin-top: 1.8rem;
+}
+
+.dress-card {
+  min-width: min(220px, 100%);
+  max-width: 260px;
+  padding: 1.8rem 1.6rem 1.6rem;
+  text-align: center;
+}
+
+.dress-card__icon {
+  width: 42px;
+  height: 56px;
+  margin: 0 auto .9rem;
+  color: var(--gold);
+}
+
+.dress-card__label {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--ink);
+  margin-bottom: .5rem;
+}
+
+.dress-card__text {
+  font-size: .88rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.dress-palette {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .6rem;
+  margin-top: 1.7rem;
+}
+
+.dress-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .6);
+  box-shadow: var(--shadow-card), inset 0 0 0 1px rgba(0, 0, 0, .06);
+  transition: transform .25s var(--ease-lux);
+}
+.dress-swatch:hover { transform: translateY(-3px) scale(1.12); }
+
 /* ---------- Contacts ---------- */
 
 .contacts {
@@ -660,6 +716,7 @@ body.on-light .page-frame { opacity: 1; }
   .timeline__sub { font-size: .92rem; }
   .contact-card { min-width: 100%; padding: 1.2rem 1.4rem; }
   .venue__address { font-size: 1rem; }
+  .dress-card { min-width: 100%; }
 }
 
 @media (min-width: 1600px) {

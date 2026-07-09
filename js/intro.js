@@ -1,10 +1,11 @@
 /**
  * intro.js — the cinematic opening sequence.
  *
- * Timeline after the guest clicks "Open Invitation" (~4.2s total):
- *   0.00s  button morphs into light, golden burst from its position
+ * Timeline after the guest clicks "Open Invitation" (~4.4s total):
+ *   0.00s  wax-seal monogram stamps + ripples (tactile tap feedback)
+ *   0.17s  button morphs into light, golden burst from its position
  *          (music.start() silently unlocks playback — nothing audible yet)
- *   0.10s  butterflies fly away (physics, depth)
+ *   0.27s  butterflies fly away (physics, depth)
  *   0.60s  petals (sakura + chamomile) begin falling on the ambient layer
  *   0.70s  intro modal dissolves, rings overlay fades in and plays:
  *          rings rotate in from the sides, meet, touch, gleam sweeps,
@@ -38,6 +39,11 @@ export async function playIntro({ introField, ambientField, onReveal }) {
     finish({ intro, cinema, introField, onReveal });
     return;
   }
+
+  // 0. Wax-seal tap feedback — a quick stamp + ripple on the monogram,
+  // played before the button morph and ring cinematic begin.
+  openBtn.classList.add('is-stamping');
+  await wait(170);
 
   // 1. Button morph + golden burst from its centre
   openBtn.classList.add('is-morphing');

@@ -90,6 +90,12 @@ function renderDynamic(guest, moment) {
   $('venueAddress').textContent = CONFIG.venue.address[lang];
   $('closingNames').textContent = CONFIG.couple[lang];
 
+  // Wax-seal monogram on the open button — first letters, per language
+  const sealMono = $('openSealMono');
+  if (sealMono) {
+    sealMono.textContent = `${CONFIG.couple.first[lang][0]}&${CONFIG.couple.second[lang][0]}`;
+  }
+
   // Schedule timeline
   $('scheduleList').replaceChildren(
     ...CONFIG.schedule.map((item, i) => {
@@ -125,6 +131,19 @@ function renderDynamic(guest, moment) {
         className: 'contact-card__phone', textContent: c.phone, href: `tel:${c.tel}`,
       });
       li.append(name, phone);
+      return li;
+    }),
+  );
+
+  // Dress-code palette swatches
+  $('dressPalette').replaceChildren(
+    ...CONFIG.dressCode.palette.map((c, i) => {
+      const li = document.createElement('li');
+      li.className = 'dress-swatch';
+      li.style.background = c.hex;
+      li.title = c.name[lang];
+      li.dataset.stagger = '';
+      li.style.setProperty('--i', i);
       return li;
     }),
   );

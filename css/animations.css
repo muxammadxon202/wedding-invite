@@ -129,6 +129,33 @@
   100% { transform: scale(.72); opacity: 0; filter: blur(10px); letter-spacing: .4em; }
 }
 
+/* Wax-seal monogram on the open button: idle heartbeat ring */
+@keyframes sealPulse {
+  0%   { transform: scale(.82); opacity: 0; }
+  35%  { opacity: .6; }
+  100% { transform: scale(1.55); opacity: 0; }
+}
+
+/* Hover: the seal presses in, like wax taking an impression */
+@keyframes sealPress {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(.9); }
+  100% { transform: scale(1); }
+}
+
+/* Tap: a sharp stamp before the button morph + ring cinematic begins */
+@keyframes sealStamp {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(.78); }
+  60%  { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+@keyframes sealRipple {
+  0%   { transform: scale(.6); opacity: .9; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
 @keyframes musicPulse {
   0%   { transform: scale(1); opacity: .8; }
   70%  { transform: scale(1.45); opacity: 0; }

@@ -501,6 +501,69 @@
 }
 .open-btn:hover .open-btn__butterfly { transform: translateY(-3px) rotate(-8deg) scale(1.12); }
 
+/* Wax-seal monogram — sits to the left of the label, echoing the
+   couple's initials like a stamped invitation seal */
+.open-btn__seal {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+}
+
+.open-btn__seal-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 244, 214, .5), transparent 55%),
+    linear-gradient(145deg, #8A6D1F, #E9D9AE 45%, #C6A24B 75%, #8A6D1F);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, .4),
+    inset 0 -2px 3px rgba(0, 0, 0, .35),
+    0 2px 6px rgba(0, 0, 0, .3);
+}
+
+.open-btn__seal-mono {
+  position: relative;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 600;
+  font-size: .62rem;
+  letter-spacing: 0;
+  color: #2A1D06;
+}
+
+/* Idle heartbeat ring — a quiet tactile affordance even before touch */
+.open-btn__seal::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid rgba(198, 162, 75, .45);
+  opacity: 0;
+  animation: sealPulse 3.4s var(--ease-lux) infinite;
+}
+
+/* Hover: the wax presses in */
+.open-btn:hover .open-btn__seal-ring { animation: sealPress .5s var(--ease-lux); }
+
+/* Tap: sharp stamp + expanding ripple, played by intro.js just before
+   the button morph and ring cinematic begin */
+.open-btn.is-stamping .open-btn__seal-ring {
+  animation: sealStamp .5s var(--ease-lux) forwards;
+}
+.open-btn.is-stamping .open-btn__seal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(233, 217, 174, .8);
+  animation: sealRipple .6s var(--ease-lux) forwards;
+}
+
 /* click → morph into light */
 .open-btn.is-morphing {
   animation: btnMorph .8s var(--ease-lux) forwards;
