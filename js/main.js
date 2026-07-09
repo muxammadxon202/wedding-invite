@@ -66,10 +66,22 @@ function greetingFor(guest, lang) {
   return t('intro.fallbackGreeting');
 }
 
+/** Second half of the couple's name, or a generic stand-in for guests
+ * whose invite has `hidePartner` set (they shouldn't see the bride's
+ * real name before the wedding). */
+function partnerNameFor(guest, lang) {
+  return (guest && guest.hidePartner) ? t('hero.partnerHidden') : CONFIG.couple.second[lang];
+}
+
+/** Full "Groom & Bride" display string, respecting hidePartner. */
+function coupleDisplay(guest, lang) {
+  return `${CONFIG.couple.first[lang]} ${t('common.and')} ${partnerNameFor(guest, lang)}`;
+}
+
 function renderDynamic(guest, moment) {
   const lang = getLang();
 
-  document.title = `${t('meta.title')} · ${CONFIG.couple[lang]}`;
+  document.title = `${t('meta.title')} · ${coupleDisplay(guest, lang)}`;
 
   const greeting = greetingFor(guest, lang);
   const introGreeting = $('introGreeting');
@@ -79,7 +91,7 @@ function renderDynamic(guest, moment) {
   $('heroNames').replaceChildren(
     document.createTextNode(CONFIG.couple.first[lang] + ' '),
     Object.assign(document.createElement('span'), { className: 'hero__amp', textContent: '&' }),
-    document.createTextNode(' ' + CONFIG.couple.second[lang]),
+    document.createTextNode(' ' + partnerNameFor(guest, lang)),
   );
   $('heroDate').textContent = formatDate(moment, lang);
   $('dateLine').textContent =
@@ -88,7 +100,7 @@ function renderDynamic(guest, moment) {
 
   $('venueName').textContent = CONFIG.venue.name[lang];
   $('venueAddress').textContent = CONFIG.venue.address[lang];
-  $('closingNames').textContent = CONFIG.couple[lang];
+  $('closingNames').textContent = coupleDisplay(guest, lang);
 
   // Wax-seal monogram on the open button — first letters, per language
   const sealMono = $('openSealMono');

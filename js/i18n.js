@@ -12,6 +12,8 @@ export const STRINGS = {
     'a11y.musicOn': 'Включить музыку',
     'a11y.musicOff': 'Выключить музыку',
     'a11y.dressPalette': 'Рекомендуемая палитра оттенков',
+    'common.and': 'и',
+    'hero.partnerHidden': 'любимая',
 
     'intro.badge': 'Свадебное приглашение',
     'intro.fallbackGreeting': 'Дорогие гости',
@@ -80,6 +82,8 @@ export const STRINGS = {
     'a11y.musicOn': 'Musiqani yoqish',
     'a11y.musicOff': 'Musiqani oʻchirish',
     'a11y.dressPalette': 'Tavsiya etilgan ranglar palitrasi',
+    'common.and': 'va',
+    'hero.partnerHidden': "umr yoʻldoshim",
 
     'intro.badge': 'Toʻy taklifnomasi',
     'intro.fallbackGreeting': 'Aziz mehmonlar',

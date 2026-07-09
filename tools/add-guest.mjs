@@ -10,37 +10,36 @@
  *   --m              male greeting    → «Дорогой …» / «Hurmatli …»
  *   --family         plural greeting  → «Дорогая семья …» / «Hurmatli … oilasi»
  *   --lang ru|uz     the language the page opens in (default uz)
+ *   --hide-partner   this guest's card shows the groom's name plus a
+ *                    generic "любимая / umr yo'ldoshim" instead of the
+ *                    bride's real name (for guests who shouldn't see it
+ *                    before the wedding)
  *   --greeting-ru "…"  custom Russian greeting (overrides --f/--m)
  *   --greeting-uz "…"  custom Uzbek greeting
  *
  * Examples:
  *   node tools/add-guest.mjs "Хотинжон" "Hotinjon" --f
  *   node tools/add-guest.mjs "Азиз" "Aziz" --m --lang ru
- *   node tools/add-guest.mjs "Каримовы" "Karimovlar" --family
+ *   node tools/add-guest.mjs "Мемати" "Memati" --m --hide-partner
  *
- * The script appends the guest to tools/guests.input.json, rebuilds the
- * encrypted data/guests.json (existing links stay valid — tokens are
- * persisted), and prints the ready-to-send link for the new guest.
- * After running it, commit & push so the live site knows the new guest:
- *   git add data/guests.json && git commit -m "Add guest" && git push
+ * SAFE TO RUN FROM ANY MACHINE: this script only ever encrypts and
+ * merges the ONE new guest into data/guests.json — every other guest
+ * already deployed (added from a different machine's tools/guests.input.json)
+ * is left completely untouched. It never rebuilds the whole database.
+ *
+ * After running it, publish so the live site knows the new guest:
+ *   git add data/guests.json tools/guests.input.json && git commit -m "guest" && git push
+ * (tools/guests.input.json itself stays gitignored — only the token
+ * assigned to it is written locally so it's stable on re-runs.)
  */
 
-import { spawnSync } from 'node:child_process';
-import { readFile, writeFile } from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
-import path from 'node:path';
-
-const BASE = 'https://muxammadxon202.github.io/wedding-invite/';
-
-const here = path.dirname(fileURLToPath(import.meta.url));
-const inputFile = path.join(here, 'guests.input.json');
+import {
+  BASE, loadInputList, saveInputList, loadDb, saveDb, mergeGuestIntoDb,
+  newToken, buildRecord,
+} from './guest-db.mjs';
 
 const args = process.argv.slice(2);
-const flag = (name) => {
-  const i = args.indexOf(name);
-  if (i === -1) return null;
-  return true;
-};
+const flag = (name) => args.includes(name);
 const flagValue = (name) => {
   const i = args.indexOf(name);
   return i !== -1 ? args[i + 1] : null;
@@ -56,7 +55,7 @@ for (let i = 0; i < args.length; i++) {
 
 const [nameRu, nameUzArg] = positional;
 if (!nameRu) {
-  console.error('Usage: node tools/add-guest.mjs "Имя (RU)" "Ism (UZ)" [--f|--m|--family] [--lang ru|uz]');
+  console.error('Usage: node tools/add-guest.mjs "Имя (RU)" "Ism (UZ)" [--f|--m|--family] [--lang ru|uz] [--hide-partner]');
   process.exit(1);
 }
 const nameUz = nameUzArg ?? nameRu;
@@ -64,6 +63,7 @@ const nameUz = nameUzArg ?? nameRu;
 const isF = flag('--f');
 const isM = flag('--m');
 const isFamily = flag('--family');
+const isHidePartner = flag('--hide-partner');
 const lang = flagValue('--lang') === 'ru' ? 'ru' : 'uz';
 
 let greetingRu = flagValue('--greeting-ru');
@@ -79,41 +79,38 @@ if (!greetingUz) {
   greetingUz = isFamily ? `Hurmatli ${nameUz} oilasi` : `Hurmatli ${nameUz}`;
 }
 
-// Append to the private input list
-let guests = [];
-try {
-  guests = JSON.parse(await readFile(inputFile, 'utf8'));
-} catch { /* first guest ever — start a new list */ }
+// Append to the private input list (local record-keeping only)
+const guests = await loadInputList();
 
-if (guests.some((g) => g.nameRu === nameRu && g.nameUz === nameUz)) {
+let me = guests.find((g) => g.nameRu === nameRu && g.nameUz === nameUz);
+if (me) {
   console.error(`Гость "${nameRu}" уже есть в списке — ссылка ниже (не добавлен повторно).`);
 } else {
-  guests.push({
+  me = {
     nameRu, nameUz, lang,
     type: isFamily ? 'family' : 'guest',
     greetingRu, greetingUz,
-  });
-  await writeFile(inputFile, JSON.stringify(guests, null, 2) + '\n', 'utf8');
+    ...(isHidePartner ? { hidePartner: true } : {}),
+  };
+  guests.push(me);
 }
 
-// Rebuild the encrypted database (tokens persist, old links stay valid)
-const gen = spawnSync(process.execPath, [path.join(here, 'generate-guests.mjs')], {
-  stdio: ['ignore', 'ignore', 'inherit'],
-});
-if (gen.status !== 0) {
-  console.error('generate-guests.mjs failed — see errors above.');
-  process.exit(1);
-}
+if (!me.token) me.token = newToken();
+await saveInputList(guests);
 
-// The generator persisted tokens — read the fresh one and print the link
-const updated = JSON.parse(await readFile(inputFile, 'utf8'));
-const me = updated.find((g) => g.nameRu === nameRu && g.nameUz === nameUz);
+// Encrypt just this guest and merge into the deployed database —
+// every other guest already there (from any machine) stays untouched.
+const record = buildRecord(me);
+const db = await loadDb();
+await mergeGuestIntoDb(db, me.token, record);
+await saveDb(db);
 
 console.log('\n──────────────────────────────────────────────');
 console.log(`  Гость:       ${nameRu} / ${nameUz}`);
 console.log(`  Приветствие: ${greetingRu} · ${greetingUz}`);
 console.log(`  Язык:        ${lang.toUpperCase()}`);
+if (isHidePartner) console.log('  Имя невесты: скрыто (umr yo\'ldoshim / любимая)');
 console.log('\n  Личная ссылка (отправьте гостю):');
 console.log(`  ${BASE}?invite=${me.token}`);
 console.log('──────────────────────────────────────────────');
-console.log('\nНе забудьте опубликовать: git add data/guests.json && git commit -m "guest" && git push\n');
+console.log('\nНе забудьте опубликовать: git add data/guests.json tools/guests.input.json && git commit -m "guest" && git push\n');
