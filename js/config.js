@@ -19,7 +19,7 @@ export const CONFIG = {
 
   // Default celebration date/time (guests may carry their own).
   weddingDate: '2026-08-03',   // YYYY-MM-DD
-  weddingTime: '18:00',        // HH:mm, 24h
+  weddingTime: '19:00',        // HH:mm, 24h
   utcOffset: '+05:00',         // Asia/Samarkand
 
   venue: {
@@ -48,7 +48,7 @@ export const CONFIG = {
 
   contacts: [
     { name: { ru: 'Фозил ака', uz: 'Fozil aka' }, phone: '+998 90 605-22-55', tel: '+998906052255' },
-    { name: { ru: 'Мухаммадхон', uz: 'Muxammadxon' }, phone: '+998 95 213-58-59', tel: '+998952135859' },
+    { name: { ru: 'Дилшодхон', uz: 'Dilshodxon' }, phone: '+998 97 911-76-11', tel: '+998979117611' },
   ],
 
   musicSrc: 'assets/music/2.mp3',

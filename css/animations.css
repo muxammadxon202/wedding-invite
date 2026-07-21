@@ -261,6 +261,13 @@
   50%      { opacity: 1; transform: scale(1) rotate(45deg); }
 }
 
+/* A warm flash blooms the instant the two rings touch */
+@keyframes flashPop {
+  0%   { opacity: 0; transform: scale(.6); }
+  22%  { opacity: 1; transform: scale(1.04); }
+  100% { opacity: 0; transform: scale(1.1); }
+}
+
 /* ---------- Scroll reveal system ---------- */
 
 .reveal {
