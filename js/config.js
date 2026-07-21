@@ -39,10 +39,10 @@ export const CONFIG = {
 
   // Day programme: times here, translated labels in i18n.js
   schedule: [
-    { time: '17:45', key: 'gathering' },
-    { time: '18:00', key: 'ceremony' },
-    { time: '19:00', key: 'banquet' },
-    { time: '21:30', key: 'cake' },
+    { time: '18:45', key: 'gathering' },
+    { time: '19:00', key: 'ceremony' },
+    { time: '20:00', key: 'banquet' },
+    { time: '22:30', key: 'cake' },
     { time: '23:00', key: 'farewell' },
   ],
 
