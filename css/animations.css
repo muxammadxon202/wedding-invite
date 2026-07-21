@@ -255,10 +255,10 @@
   100% { opacity: .5; transform: scale(1.1); }
 }
 
-@keyframes flashPop {
-  0%   { opacity: 0; }
-  35%  { opacity: 1; }
-  100% { opacity: 0; }
+/* The bride's diamond catches the light — a quick sparkle glint */
+@keyframes diamondTwinkle {
+  0%, 100% { opacity: 0; transform: scale(.5) rotate(0deg); }
+  50%      { opacity: 1; transform: scale(1) rotate(45deg); }
 }
 
 /* ---------- Scroll reveal system ---------- */

@@ -648,13 +648,15 @@
 }
 .cinema.play .cinema__bloom { animation: bloomRise 3.4s var(--ease-lux) .4s forwards; }
 
-.cinema__flash {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(60% 50% at 50% 50%, rgba(255, 250, 235, .95), rgba(243, 222, 158, .35) 55%, transparent 78%);
+/* The bride's diamond twinkles once the rings settle */
+.ring-diamond__glint {
   opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
 }
-.cinema.play .cinema__flash { animation: flashPop 1s var(--ease-lux) 2.5s forwards; }
+.cinema.play .ring-diamond__glint {
+  animation: diamondTwinkle 1.4s ease-in-out 2.7s infinite;
+}
 
 /* ---------- Invitation not found ---------- */
 

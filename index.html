@@ -273,6 +273,12 @@
           <stop offset="0" stop-color="#000" stop-opacity=".42"/>
           <stop offset="1" stop-color="#000" stop-opacity="0"/>
         </radialGradient>
+        <!-- Cool white sparkle for the bride's diamond -->
+        <linearGradient id="diamondGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#FFFFFF"/>
+          <stop offset=".5" stop-color="#DCEEFF"/>
+          <stop offset="1" stop-color="#A9C7E8"/>
+        </linearGradient>
       </defs>
 
       <!-- grounding shadow beneath the rings -->
@@ -304,6 +310,27 @@
                 stroke-dasharray="30 360" stroke-linecap="round" class="ring__gleam"/>
         <circle cx="0" cy="0" r="62" fill="none" stroke="#FFF7DC" stroke-width="1.4" opacity=".5"
                 stroke-dasharray="14 376" stroke-linecap="round" class="ring__gleam ring__gleam--rev"/>
+        <!-- The bride's ring: a solitaire diamond set at the top -->
+        <g class="ring-diamond">
+          <!-- gold prongs cradling the stone onto the band -->
+          <g stroke="url(#goldStroke)" stroke-width="2.6" stroke-linecap="round" fill="none">
+            <path d="M-8.5 -76 L-5 -66"/>
+            <path d="M8.5 -76 L5 -66"/>
+            <path d="M0 -78 L0 -66"/>
+          </g>
+          <!-- brilliant-cut stone, crown up -->
+          <path d="M-5 -86 L5 -86 L11 -78 L0 -66 L-11 -78 Z"
+                fill="url(#diamondGrad)" stroke="#FFFFFF" stroke-width=".8" stroke-linejoin="round"/>
+          <g stroke="#FFFFFF" stroke-width=".6" opacity=".6" fill="none">
+            <path d="M-11 -78 L11 -78"/>
+            <path d="M-5 -86 L0 -66"/>
+            <path d="M5 -86 L0 -66"/>
+            <path d="M0 -86 L0 -78"/>
+          </g>
+          <!-- twinkle glint -->
+          <path class="ring-diamond__glint" d="M-3.5 -81 h7 M0 -84.5 v7"
+                stroke="#FFFFFF" stroke-width="1" stroke-linecap="round"/>
+        </g>
       </g>
 
       <!-- glow + flare where the bands touch -->
@@ -321,7 +348,6 @@
         <circle class="ringburst__p" r="1.4" style="--a:322deg" fill="#F3DE9E"/>
       </g>
     </svg>
-    <div class="cinema__flash"></div>
   </div>
 
   <!-- ================= INVITATION NOT FOUND ================= -->
@@ -467,13 +493,23 @@
     <section class="section closing reveal" aria-label="Заключение">
       <svg class="divider" aria-hidden="true"><use href="#flourish"/></svg>
       <p class="closing__text serif-italic" data-i18n="closing.text">Мы очень ждём встречи и будем счастливы видеть вас среди самых близких!</p>
-      <p class="closing__sign" data-i18n="closing.sign">С любовью,</p>
-      <p class="closing__names" id="closingNames">Мухаммадхон и Зилолахон</p>
+      <p class="closing__names" id="closingNames">Fozilxon Ochilovlar oilasi</p>
       <svg class="closing__butterfly" aria-hidden="true"><use href="#butterflyIcon"/></svg>
     </section>
 
     <footer class="footer">
-      <p><span data-i18n="footer.made">Сделано с любовью</span> · <span id="footerYear">2026</span></p>
+      <!-- M&Z monogram -->
+      <svg class="brand-mark" viewBox="0 0 140 140" role="img" aria-label="Muhammadxon & Zilolaxon">
+        <circle cx="70" cy="70" r="60" fill="none" stroke="url(#goldStroke)" stroke-width="1.3"/>
+        <circle cx="70" cy="70" r="54" fill="none" stroke="url(#goldStroke)" stroke-width=".6" opacity=".55"/>
+        <circle cx="70" cy="10" r="2.1" fill="url(#goldFill)"/>
+        <circle cx="70" cy="130" r="2.1" fill="url(#goldFill)"/>
+        <text x="70" y="86" text-anchor="middle" class="brand-mark__mono">M<tspan class="brand-mark__amp">&amp;</tspan>Z</text>
+      </svg>
+      <p class="footer__credit">
+        <span data-i18n="footer.dev">Разработано</span> <span class="footer__brand">silkway12</span>
+      </p>
+      <p class="footer__year"><span id="footerYear">2026</span></p>
     </footer>
   </main>
 

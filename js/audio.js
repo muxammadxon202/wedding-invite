@@ -4,13 +4,10 @@
  * later; when it is missing the control simply never appears.
  *
  * Playback timeline:
- *   click "Open Invitation"  → start() unlocks <audio> + WebAudio silently
- *                              (satisfies autoplay policy, nothing audible yet)
- *   rings touch on screen    → riseAtRingTouch() plays a short synthesized
- *                              ring-chime, then the soundtrack fades in
- *   reduced-motion fallback  → riseImmediately() fades the soundtrack in
- *                              with no chime (there is no ring animation
- *                              to anchor it to)
+ *   click "Open Invitation"  → start() unlocks the <audio> element
+ *                              (satisfies the autoplay gesture policy)
+ *   rings meet on screen      → riseAtRingTouch() fades the soundtrack in
+ *   reduced-motion fallback   → riseImmediately() fades the soundtrack in
  */
 
 import { CONFIG } from './config.js';
@@ -21,7 +18,6 @@ const btn = document.getElementById('musicBtn');
 let el = null;
 let available = false;
 let fadeRaf = 0;
-let actx = null;
 
 function fadeTo(volume, ms) {
   cancelAnimationFrame(fadeRaf);
@@ -49,43 +45,6 @@ function revealButton() {
     btn.hidden = false;
     requestAnimationFrame(() => btn.classList.add('is-visible'));
   }
-}
-
-/* ---------- ring-touch chime (synthesized, no extra asset) ---------- */
-
-function ensureAudioContext() {
-  const AudioCtx = window.AudioContext || window.webkitAudioContext;
-  if (!AudioCtx) return null;
-  if (!actx) actx = new AudioCtx();
-  if (actx.state === 'suspended') actx.resume().catch(() => {});
-  return actx;
-}
-
-/** A brief, bright metallic "ting" — two gold bands meeting. ~0.32s. */
-function playRingChime() {
-  const ctx = ensureAudioContext();
-  if (!ctx) return;
-  const now = ctx.currentTime;
-  const out = ctx.createGain();
-  out.gain.value = 0.9;
-  out.connect(ctx.destination);
-
-  [
-    { freq: 2600, gain: 0.22, decay: 0.32 },
-    { freq: 3900, gain: 0.13, decay: 0.24 },
-    { freq: 5200, gain: 0.07, decay: 0.16 },
-  ].forEach(({ freq, gain, decay }) => {
-    const osc = ctx.createOscillator();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(freq, now);
-    const g = ctx.createGain();
-    g.gain.setValueAtTime(0, now);
-    g.gain.linearRampToValueAtTime(gain, now + 0.006);
-    g.gain.exponentialRampToValueAtTime(0.0001, now + decay);
-    osc.connect(g).connect(out);
-    osc.start(now);
-    osc.stop(now + decay + 0.05);
-  });
 }
 
 export const music = {
@@ -124,31 +83,24 @@ export const music = {
   },
 
   /**
-   * Called synchronously from the open-button click. Unlocks the <audio>
-   * element and the WebAudio context while nothing is audible yet — this
-   * is the "user gesture" browsers require, spent early so the real cue
-   * later (riseAtRingTouch) never needs a fresh gesture of its own.
+   * Called synchronously from the open-button click — the "user gesture"
+   * browsers require to permit playback. Unlocks the <audio> element.
    */
   start() {
-    ensureAudioContext();
     if (!available || !el) return;
     el.play().catch(() => {});
   },
 
   /**
-   * The emotional cue: called the instant the two rings visually meet.
-   * Plays a soft ring-touch chime, then lets the soundtrack rise —
-   * as if their touch is what starts the music.
+   * Called as the two rings visually meet — the soundtrack fades in
+   * gently, as if their touch is what starts the music. No chime.
    */
   riseAtRingTouch() {
-    playRingChime();
     if (!available || !el) return;
-    setTimeout(() => {
-      el.play().catch(() => {});
-      fadeTo(CONFIG.musicVolume, 2600);
-      revealButton();
-      refreshButton(true);
-    }, 260);
+    el.play().catch(() => {});
+    fadeTo(CONFIG.musicVolume, 2600);
+    revealButton();
+    refreshButton(true);
   },
 
   /** Reduced-motion fallback — no rings play, so just fade in gently. */

@@ -170,7 +170,7 @@ function renderDynamic(guest, moment) {
 
   $('venueName').textContent = CONFIG.venue.name[lang];
   $('venueAddress').textContent = CONFIG.venue.address[lang];
-  $('closingNames').textContent = coupleDisplay(guest, lang);
+  $('closingNames').textContent = CONFIG.host[lang];
 
   // Add-to-calendar month grid: full calendar for the guest's own
   // wedding moment, wedding day circled; click downloads a fresh .ics

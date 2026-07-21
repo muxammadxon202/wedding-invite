@@ -11,6 +11,12 @@ export const CONFIG = {
     second: { ru: 'Зилолахон', uz: 'Zilolaxon' },
   },
 
+  // Host family — signs the closing of the invitation
+  host: {
+    ru: 'Семья Фозилхона Очилова',
+    uz: 'Fozilxon Ochilovlar oilasi',
+  },
+
   // Default celebration date/time (guests may carry their own).
   weddingDate: '2026-08-03',   // YYYY-MM-DD
   weddingTime: '18:00',        // HH:mm, 24h

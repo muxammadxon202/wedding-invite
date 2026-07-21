@@ -68,6 +68,7 @@ export const STRINGS = {
     'nf.text': 'Проверьте, пожалуйста, ссылку из личного сообщения — или свяжитесь с нами, и мы отправим её ещё раз.',
 
     'footer.made': 'Сделано с любовью',
+    'footer.dev': 'Разработано',
   },
 
   uz: {
@@ -133,6 +134,7 @@ export const STRINGS = {
     'nf.text': 'Iltimos, shaxsiy xabardagi havolani tekshiring yoki biz bilan bogʻlaning — uni qayta yuboramiz.',
 
     'footer.made': 'Mehr bilan tayyorlandi',
+    'footer.dev': 'Ishlab chiqildi',
   },
 };
 

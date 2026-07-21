@@ -8,15 +8,14 @@
  *   0.27s  butterflies fly away (physics, depth)
  *   0.60s  petals (sakura + chamomile) begin falling on the ambient layer
  *   0.70s  intro modal dissolves, rings overlay fades in and plays:
- *          rings rotate in from the sides, meet, touch, gleam sweeps,
- *          flare + flash at the touch point, bloom rises
- *   3.20s  the rings touch — a soft chime rings out, then the soundtrack
- *          fades in underneath it, as if their meeting starts the music
+ *          the groom's plain band and the bride's diamond ring rotate in
+ *          from the sides, meet, touch, gleam sweeps, soft flare + bloom
+ *   3.20s  the rings touch — the soundtrack fades in underneath, as if
+ *          their meeting starts the music (no chime, no flash)
  *   3.90s  overlay dissolves, the invitation fades in underneath
  *
  * Under prefers-reduced-motion the whole sequence collapses to a
- * simple elegant crossfade, and the soundtrack fades in immediately
- * (there is no ring animation to anchor the chime to).
+ * simple elegant crossfade, and the soundtrack fades in immediately.
  */
 
 import { music } from './audio.js';
@@ -69,13 +68,12 @@ export async function playIntro({ introField, ambientField, onReveal }) {
     cinema.classList.add('is-visible', 'play');
   });
 
-  // 8. The rings touch at 2.5s into their animation (matches the flash/
-  // spark-burst keyframes in animations.css) — that instant is the chime
-  // cue, with the soundtrack rising right behind it. Runs on its own
-  // timer so it never blocks the rest of the sequence below.
+  // 8. The rings touch at 2.5s into their animation — that instant is
+  // the music cue, with the soundtrack rising right behind it. Runs on
+  // its own timer so it never blocks the rest of the sequence below.
   setTimeout(() => music.riseAtRingTouch(), 2500);
 
-  // 9. Flash peaks ~3.5s in; hold the overlay a beat past it
+  // 9. Hold the overlay a beat past the touch, then dissolve
   await wait(3200);
   cinema.classList.add('is-leaving');
   await wait(650);

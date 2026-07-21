@@ -763,12 +763,48 @@ body.on-light .page-frame { opacity: 1; }
 /* ---------- Footer ---------- */
 
 .footer {
-  padding: 1.6rem 1rem calc(1.6rem + env(safe-area-inset-bottom));
+  padding: 2.4rem 1rem calc(1.8rem + env(safe-area-inset-bottom));
   text-align: center;
   font-size: .74rem;
   letter-spacing: .12em;
   color: rgba(110, 99, 83, .75);
   border-top: 1px solid rgba(198, 162, 75, .16);
+}
+
+/* M&Z monogram — the couple's mark closes the card */
+.brand-mark {
+  width: clamp(76px, 20vw, 96px);
+  height: auto;
+  margin: 0 auto 1rem;
+  filter: drop-shadow(0 2px 8px rgba(198, 162, 75, .25));
+  animation: ornamentBreathe 7s ease-in-out infinite;
+}
+.brand-mark__mono {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 46px;
+  fill: url(#goldFill);
+}
+.brand-mark__amp {
+  font-style: italic;
+  font-size: 34px;
+}
+
+.footer__credit {
+  margin-bottom: .5rem;
+  font-size: .72rem;
+  letter-spacing: .1em;
+  color: var(--muted);
+}
+.footer__brand {
+  font-weight: 600;
+  letter-spacing: .08em;
+  color: var(--gold-deep);
+}
+.footer__year {
+  font-size: .7rem;
+  letter-spacing: .22em;
+  color: rgba(110, 99, 83, .6);
 }
 
 /* ---------- Responsive refinements ---------- */
