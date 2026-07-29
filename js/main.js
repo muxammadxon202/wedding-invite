@@ -129,6 +129,12 @@ function hasCustomVenue(guest) {
   return !!(guest && (guest.venueNameRu || guest.venueNameUz));
 }
 
+/** Venue section heading — guest override or the default "venue.title". */
+function venueTitleFor(guest, lang) {
+  const override = guest && (lang === 'uz' ? guest.venueTitleUz : guest.venueTitleRu);
+  return override || t('venue.title');
+}
+
 /* ---------- add to calendar (.ics download) ---------- */
 
 const pad2 = (n) => String(n).padStart(2, '0');
@@ -191,6 +197,8 @@ function renderDynamic(guest, moment) {
   if (heroEyebrow) heroEyebrow.textContent = eyebrowFor(guest, lang);
 
   const customVenue = hasCustomVenue(guest);
+  const venueTitle = $('venueTitle');
+  if (venueTitle) venueTitle.textContent = venueTitleFor(guest, lang);
   $('venueName').textContent = venueNameFor(guest, lang);
   $('venueAddress').textContent = CONFIG.venue.address[lang];
   $('venueAddress').style.display = customVenue ? 'none' : '';

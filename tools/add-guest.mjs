@@ -24,6 +24,9 @@
  *   --venue-ru "…"     plain-text-only location (RU) — hides the address
  *                       line and map card/links entirely
  *   --venue-uz "…"     same, Uzbek
+ *   --venue-title-ru "…" overrides the venue section heading (RU), e.g.
+ *                       so it doesn't say "wedding venue" for another event
+ *   --venue-title-uz "…" same, Uzbek
  *   --hide-schedule    hides the day-programme/timeline section
  *
  * Examples:
@@ -61,6 +64,7 @@ const flagValue = (name) => {
 const VALUE_FLAGS = new Set([
   '--lang', '--greeting-ru', '--greeting-uz', '--date', '--time',
   '--event-ru', '--event-uz', '--venue-ru', '--venue-uz',
+  '--venue-title-ru', '--venue-title-uz',
 ]);
 
 const positional = [];
@@ -90,6 +94,8 @@ const eventLabelRu = flagValue('--event-ru');
 const eventLabelUz = flagValue('--event-uz');
 const venueNameRu = flagValue('--venue-ru');
 const venueNameUz = flagValue('--venue-uz');
+const venueTitleRu = flagValue('--venue-title-ru');
+const venueTitleUz = flagValue('--venue-title-uz');
 
 let greetingRu = flagValue('--greeting-ru');
 let greetingUz = flagValue('--greeting-uz');
@@ -108,20 +114,26 @@ if (!greetingUz) {
 const guests = await loadInputList();
 
 let me = guests.find((g) => g.nameRu === nameRu && g.nameUz === nameUz);
-if (me) {
-  console.error(`Гость "${nameRu}" уже есть в списке — ссылка ниже (не добавлен повторно).`);
+const isUpdate = !!me;
+const fields = {
+  nameRu, nameUz, lang,
+  type: isFamily ? 'family' : 'guest',
+  greetingRu, greetingUz,
+  ...(isHidePartner ? { hidePartner: true } : {}),
+  ...(weddingDate ? { weddingDate } : {}),
+  ...(weddingTime ? { weddingTime } : {}),
+  ...(eventLabelRu || eventLabelUz ? { eventLabelRu: eventLabelRu ?? '', eventLabelUz: eventLabelUz ?? '' } : {}),
+  ...(venueNameRu || venueNameUz ? { venueNameRu: venueNameRu ?? '', venueNameUz: venueNameUz ?? '' } : {}),
+  ...(venueTitleRu || venueTitleUz ? { venueTitleRu: venueTitleRu ?? '', venueTitleUz: venueTitleUz ?? '' } : {}),
+  ...(isHideSchedule ? { hideSchedule: true } : {}),
+};
+if (isUpdate) {
+  // Re-running with the same name updates the record in place (same
+  // token, same link) — lets you amend greetings/overrides after the fact.
+  Object.assign(me, fields);
+  console.error(`Гость "${nameRu}" уже есть в списке — запись обновлена, ссылка не изменилась.`);
 } else {
-  me = {
-    nameRu, nameUz, lang,
-    type: isFamily ? 'family' : 'guest',
-    greetingRu, greetingUz,
-    ...(isHidePartner ? { hidePartner: true } : {}),
-    ...(weddingDate ? { weddingDate } : {}),
-    ...(weddingTime ? { weddingTime } : {}),
-    ...(eventLabelRu || eventLabelUz ? { eventLabelRu: eventLabelRu ?? '', eventLabelUz: eventLabelUz ?? '' } : {}),
-    ...(venueNameRu || venueNameUz ? { venueNameRu: venueNameRu ?? '', venueNameUz: venueNameUz ?? '' } : {}),
-    ...(isHideSchedule ? { hideSchedule: true } : {}),
-  };
+  me = fields;
   guests.push(me);
 }
 
@@ -143,6 +155,7 @@ if (isHidePartner) console.log('  Имя невесты: скрыто (umr yo\'l
 if (me.weddingDate || me.weddingTime) console.log(`  Своя дата:   ${me.weddingDate ?? '(по умолчанию)'} ${me.weddingTime ?? ''}`.trim());
 if (me.eventLabelRu || me.eventLabelUz) console.log(`  Др. событие: ${me.eventLabelRu} · ${me.eventLabelUz}`);
 if (me.venueNameRu || me.venueNameUz) console.log(`  Своё место:  ${me.venueNameRu} · ${me.venueNameUz} (адрес/карта скрыты)`);
+if (me.venueTitleRu || me.venueTitleUz) console.log(`  Загол. места: ${me.venueTitleRu} · ${me.venueTitleUz}`);
 if (me.hideSchedule) console.log('  Программа:   скрыта');
 console.log('\n  Личная ссылка (отправьте гостю):');
 console.log(`  ${BASE}?invite=${me.token}`);

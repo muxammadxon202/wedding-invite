@@ -83,6 +83,12 @@ export function buildRecord(g) {
     ...(g.venueNameRu || g.venueNameUz
       ? { venueNameRu: g.venueNameRu ?? '', venueNameUz: g.venueNameUz ?? '' }
       : {}),
+    // venueTitle: overrides the "Место проведения / Toʻy manzili" section
+    // heading — for events whose venue section shouldn't reference the
+    // wedding by name (e.g. kelin salom).
+    ...(g.venueTitleRu || g.venueTitleUz
+      ? { venueTitleRu: g.venueTitleRu ?? '', venueTitleUz: g.venueTitleUz ?? '' }
+      : {}),
     // hideSchedule: hides the day-programme section — for events that
     // don't follow the main wedding's timeline.
     ...(g.hideSchedule ? { hideSchedule: true } : {}),
