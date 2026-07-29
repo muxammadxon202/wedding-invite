@@ -191,10 +191,17 @@ function renderDynamic(guest, moment) {
   $('dateLine').textContent =
     `${weekday[0].toUpperCase()}${weekday.slice(1)} · ${(guest && guest.weddingTime) || CONFIG.weddingTime}`;
 
+  const isCustomEvent = !!(guest && (guest.eventLabelRu || guest.eventLabelUz));
+
   const introBadge = $('introBadge');
   if (introBadge) introBadge.textContent = eyebrowFor(guest, lang);
   const heroEyebrow = $('heroEyebrow');
   if (heroEyebrow) heroEyebrow.textContent = eyebrowFor(guest, lang);
+
+  // "Until the wedding" countdown title reads wrong for a different event
+  // (e.g. kelin salom) tied to the same couple — drop it, keep the timer.
+  const countdownTitle = $('countdownTitle');
+  if (countdownTitle) countdownTitle.style.display = isCustomEvent ? 'none' : '';
 
   const customVenue = hasCustomVenue(guest);
   const venueTitle = $('venueTitle');
