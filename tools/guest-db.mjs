@@ -71,6 +71,21 @@ export function buildRecord(g) {
     // generic "umr yo'ldoshim / любимая" instead of the bride's real
     // name — used for guests who shouldn't see it before the wedding.
     ...(g.hidePartner ? { hidePartner: true } : {}),
+    // eventLabel: overrides the "Wedding invitation" badge/eyebrow text —
+    // for guests invited to a different event (e.g. kelin salom) tied to
+    // the same couple.
+    ...(g.eventLabelRu || g.eventLabelUz
+      ? { eventLabelRu: g.eventLabelRu ?? '', eventLabelUz: g.eventLabelUz ?? '' }
+      : {}),
+    // venueName: plain-text-only location override — when set, the address
+    // line and the map card/links are hidden entirely (used when there is
+    // no shareable map, just a place name).
+    ...(g.venueNameRu || g.venueNameUz
+      ? { venueNameRu: g.venueNameRu ?? '', venueNameUz: g.venueNameUz ?? '' }
+      : {}),
+    // hideSchedule: hides the day-programme section — for events that
+    // don't follow the main wedding's timeline.
+    ...(g.hideSchedule ? { hideSchedule: true } : {}),
   };
 }
 

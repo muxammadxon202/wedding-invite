@@ -16,11 +16,24 @@
  *                    before the wedding)
  *   --greeting-ru "…"  custom Russian greeting (overrides --f/--m)
  *   --greeting-uz "…"  custom Uzbek greeting
+ *   --date YYYY-MM-DD  this guest's own event date (overrides the default)
+ *   --time HH:mm       this guest's own event time (overrides the default)
+ *   --event-ru "…"     overrides the "Wedding invitation" badge text (RU) —
+ *                       for a different event tied to the same couple
+ *   --event-uz "…"     same, Uzbek
+ *   --venue-ru "…"     plain-text-only location (RU) — hides the address
+ *                       line and map card/links entirely
+ *   --venue-uz "…"     same, Uzbek
+ *   --hide-schedule    hides the day-programme/timeline section
  *
  * Examples:
  *   node tools/add-guest.mjs "Хотинжон" "Hotinjon" --f
  *   node tools/add-guest.mjs "Азиз" "Aziz" --m --lang ru
  *   node tools/add-guest.mjs "Мемати" "Memati" --m --hide-partner
+ *   node tools/add-guest.mjs "Музаффар холапошшо" "Muzaffar xolaposhsho" --m \
+ *     --lang uz --date 2026-08-04 --time 18:00 \
+ *     --event-ru "Приглашение на келин салом" --event-uz "Kelin salomga taklifnoma" \
+ *     --venue-ru "Дом семьи Очиловых" --venue-uz "Ochilovlar xonadoni" --hide-schedule
  *
  * SAFE TO RUN FROM ANY MACHINE: this script only ever encrypts and
  * merges the ONE new guest into data/guests.json — every other guest
@@ -45,10 +58,15 @@ const flagValue = (name) => {
   return i !== -1 ? args[i + 1] : null;
 };
 
+const VALUE_FLAGS = new Set([
+  '--lang', '--greeting-ru', '--greeting-uz', '--date', '--time',
+  '--event-ru', '--event-uz', '--venue-ru', '--venue-uz',
+]);
+
 const positional = [];
 for (let i = 0; i < args.length; i++) {
   const a = args[i];
-  if (a === '--lang' || a === '--greeting-ru' || a === '--greeting-uz') { i++; continue; }
+  if (VALUE_FLAGS.has(a)) { i++; continue; }
   if (a.startsWith('--')) continue;
   positional.push(a);
 }
@@ -64,7 +82,14 @@ const isF = flag('--f');
 const isM = flag('--m');
 const isFamily = flag('--family');
 const isHidePartner = flag('--hide-partner');
+const isHideSchedule = flag('--hide-schedule');
 const lang = flagValue('--lang') === 'ru' ? 'ru' : 'uz';
+const weddingDate = flagValue('--date');
+const weddingTime = flagValue('--time');
+const eventLabelRu = flagValue('--event-ru');
+const eventLabelUz = flagValue('--event-uz');
+const venueNameRu = flagValue('--venue-ru');
+const venueNameUz = flagValue('--venue-uz');
 
 let greetingRu = flagValue('--greeting-ru');
 let greetingUz = flagValue('--greeting-uz');
@@ -91,6 +116,11 @@ if (me) {
     type: isFamily ? 'family' : 'guest',
     greetingRu, greetingUz,
     ...(isHidePartner ? { hidePartner: true } : {}),
+    ...(weddingDate ? { weddingDate } : {}),
+    ...(weddingTime ? { weddingTime } : {}),
+    ...(eventLabelRu || eventLabelUz ? { eventLabelRu: eventLabelRu ?? '', eventLabelUz: eventLabelUz ?? '' } : {}),
+    ...(venueNameRu || venueNameUz ? { venueNameRu: venueNameRu ?? '', venueNameUz: venueNameUz ?? '' } : {}),
+    ...(isHideSchedule ? { hideSchedule: true } : {}),
   };
   guests.push(me);
 }
@@ -110,6 +140,10 @@ console.log(`  Гость:       ${nameRu} / ${nameUz}`);
 console.log(`  Приветствие: ${greetingRu} · ${greetingUz}`);
 console.log(`  Язык:        ${lang.toUpperCase()}`);
 if (isHidePartner) console.log('  Имя невесты: скрыто (umr yo\'ldoshim / любимая)');
+if (me.weddingDate || me.weddingTime) console.log(`  Своя дата:   ${me.weddingDate ?? '(по умолчанию)'} ${me.weddingTime ?? ''}`.trim());
+if (me.eventLabelRu || me.eventLabelUz) console.log(`  Др. событие: ${me.eventLabelRu} · ${me.eventLabelUz}`);
+if (me.venueNameRu || me.venueNameUz) console.log(`  Своё место:  ${me.venueNameRu} · ${me.venueNameUz} (адрес/карта скрыты)`);
+if (me.hideSchedule) console.log('  Программа:   скрыта');
 console.log('\n  Личная ссылка (отправьте гостю):');
 console.log(`  ${BASE}?invite=${me.token}`);
 console.log('──────────────────────────────────────────────');

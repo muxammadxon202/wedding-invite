@@ -220,7 +220,7 @@
     <div class="intro__scrim" aria-hidden="true"></div>
 
     <div class="intro__content">
-      <p class="intro__badge" data-i18n="intro.badge">Свадебное приглашение</p>
+      <p class="intro__badge" id="introBadge" data-i18n="intro.badge">Свадебное приглашение</p>
 
       <svg class="intro__flourish" aria-hidden="true"><use href="#flourish"/></svg>
 
@@ -399,7 +399,7 @@
       <div class="hero__bloom" aria-hidden="true"></div>
       <svg class="hero__sprig hero__sprig--left" aria-hidden="true"><use href="#sprig"/></svg>
       <svg class="hero__sprig hero__sprig--right" aria-hidden="true"><use href="#sprig"/></svg>
-      <p class="eyebrow" data-stagger style="--i:0" data-i18n="hero.eyebrow">Приглашение на свадьбу</p>
+      <p class="eyebrow" id="heroEyebrow" data-stagger style="--i:0" data-i18n="hero.eyebrow">Приглашение на свадьбу</p>
       <h2 class="hero__names" id="heroNames" data-stagger style="--i:1">Мухаммадхон <span class="hero__amp">&amp;</span> Зилолахон</h2>
       <p class="hero__date" id="heroDate" data-stagger style="--i:2">3 августа 2026</p>
       <svg class="divider" aria-hidden="true" data-stagger style="--i:3"><use href="#flourish"/></svg>
@@ -455,7 +455,7 @@
     </section>
 
     <!-- Schedule -->
-    <section class="section reveal" aria-labelledby="scheduleTitle">
+    <section class="section reveal" id="scheduleSection" aria-labelledby="scheduleTitle">
       <p class="eyebrow" data-i18n="schedule.eyebrow">Как пройдёт день</p>
       <h2 class="section__title" id="scheduleTitle" data-i18n="schedule.title">Программа дня</h2>
       <ol class="timeline" id="scheduleList"></ol>
@@ -478,7 +478,7 @@
         </div>
       </div>
 
-      <div class="venue__links">
+      <div class="venue__links" id="venueLinks">
         <a class="btn btn--ghost" id="mapGoogle" target="_blank" rel="noopener" data-i18n="venue.google">Открыть в Google Maps</a>
         <a class="btn btn--ghost" id="mapYandex" target="_blank" rel="noopener" data-i18n="venue.yandex">Открыть в Яндекс Картах</a>
       </div>

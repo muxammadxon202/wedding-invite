@@ -112,6 +112,23 @@ function coupleDisplay(guest, lang) {
   return `${CONFIG.couple.first[lang]} ${t('common.and')} ${partnerNameFor(guest, lang)}`;
 }
 
+/** "Wedding invitation" badge/eyebrow text, or a guest-specific override
+ * for guests invited to a different event (e.g. kelin salom). */
+function eyebrowFor(guest, lang) {
+  const override = guest && (lang === 'uz' ? guest.eventLabelUz : guest.eventLabelRu);
+  return override || t('hero.eyebrow');
+}
+
+/** Plain-text venue name — guest override (no address/map) or the default. */
+function venueNameFor(guest, lang) {
+  const override = guest && (lang === 'uz' ? guest.venueNameUz : guest.venueNameRu);
+  return override || CONFIG.venue.name[lang];
+}
+
+function hasCustomVenue(guest) {
+  return !!(guest && (guest.venueNameRu || guest.venueNameUz));
+}
+
 /* ---------- add to calendar (.ics download) ---------- */
 
 const pad2 = (n) => String(n).padStart(2, '0');
@@ -137,8 +154,8 @@ function buildIcsDataUrl(guest, moment, lang) {
     `DTSTAMP:${icsTimestamp(new Date())}`,
     `DTSTART:${icsTimestamp(start)}`,
     `DTEND:${icsTimestamp(end)}`,
-    `SUMMARY:${icsEscape(`${coupleDisplay(guest, lang)} — ${t('hero.eyebrow')}`)}`,
-    `LOCATION:${icsEscape(`${CONFIG.venue.name[lang]}, ${CONFIG.venue.address[lang]}`)}`,
+    `SUMMARY:${icsEscape(`${coupleDisplay(guest, lang)} — ${eyebrowFor(guest, lang)}`)}`,
+    `LOCATION:${icsEscape(hasCustomVenue(guest) ? venueNameFor(guest, lang) : `${CONFIG.venue.name[lang]}, ${CONFIG.venue.address[lang]}`)}`,
     `DESCRIPTION:${icsEscape(greetingFor(guest, lang))}`,
     'END:VEVENT',
     'END:VCALENDAR',
@@ -168,8 +185,21 @@ function renderDynamic(guest, moment) {
   $('dateLine').textContent =
     `${weekday[0].toUpperCase()}${weekday.slice(1)} · ${(guest && guest.weddingTime) || CONFIG.weddingTime}`;
 
-  $('venueName').textContent = CONFIG.venue.name[lang];
+  const introBadge = $('introBadge');
+  if (introBadge) introBadge.textContent = eyebrowFor(guest, lang);
+  const heroEyebrow = $('heroEyebrow');
+  if (heroEyebrow) heroEyebrow.textContent = eyebrowFor(guest, lang);
+
+  const customVenue = hasCustomVenue(guest);
+  $('venueName').textContent = venueNameFor(guest, lang);
   $('venueAddress').textContent = CONFIG.venue.address[lang];
+  $('venueAddress').style.display = customVenue ? 'none' : '';
+  $('mapCard').style.display = customVenue ? 'none' : '';
+  $('venueLinks').style.display = customVenue ? 'none' : '';
+
+  const scheduleSection = $('scheduleSection');
+  if (scheduleSection) scheduleSection.hidden = !!(guest && guest.hideSchedule);
+
   $('closingNames').textContent = CONFIG.host[lang];
 
   // Add-to-calendar month grid: full calendar for the guest's own
