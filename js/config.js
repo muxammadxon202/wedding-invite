@@ -51,7 +51,7 @@ export const CONFIG = {
     { name: { ru: 'Дилшодхон', uz: 'Dilshodxon' }, phone: '+998 97 911-76-11', tel: '+998979117611' },
   ],
 
-  musicSrc: 'assets/music/2.webm',
+  musicSrc: 'assets/music/2.mp3',
   musicVolume: 0.65,
 };
 
