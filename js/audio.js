@@ -48,20 +48,23 @@ function revealButton() {
 }
 
 export const music = {
-  /** Preflights the file so a missing mp3 never breaks the experience. */
-  async init() {
-    try {
-      const res = await fetch(CONFIG.musicSrc, { method: 'HEAD' });
-      available = res.ok;
-    } catch {
-      available = false;
-    }
-    if (!available) return;
-
+  /**
+   * Builds the <audio> element synchronously so it's ready the instant
+   * "Open Invitation" is clicked. This used to preflight the file with an
+   * async HEAD request first — on a slow connection that request could
+   * still be in flight when the guest clicked, so `el` was null exactly
+   * when start() needed to call play() inside the user gesture, and the
+   * browser's autoplay policy silently blocked every later play() call
+   * for that session (no error, no console — the soundtrack just never
+   * came in). A missing/broken mp3 is still handled gracefully, just via
+   * the element's own 'error' event instead of a preflight request.
+   */
+  init() {
     el = new Audio(CONFIG.musicSrc);
     el.loop = true;
     el.preload = 'auto';
     el.volume = 0;
+    available = true;
     el.addEventListener('error', () => {
       available = false;
       btn.hidden = true;
